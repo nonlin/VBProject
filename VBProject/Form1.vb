@@ -140,6 +140,13 @@ Public Class MainForm
         sendingClientIsReady.EnableBroadcast = True
         sendingAssignedCards.EnableBroadcast = True
         sendingUpdateCardChanges.EnableBroadcast = True
+
+        sendingClient.AllowNatTraversal(True)
+        sendingClientChat.AllowNatTraversal(True)
+        sendingClientPlayerInfo.AllowNatTraversal(True)
+        sendingClientIsReady.AllowNatTraversal(True)
+        sendingAssignedCards.AllowNatTraversal(True)
+        sendingUpdateCardChanges.AllowNatTraversal(True)
     End Sub
 
     Private Sub InitializeReceiver()
@@ -154,36 +161,42 @@ Public Class MainForm
         receivingClient.ExclusiveAddressUse = False
         receivingClient.Client.SetSocketOption(Net.Sockets.SocketOptionLevel.Socket, Net.Sockets.SocketOptionName.ReuseAddress, True)
         receivingClient.Client.Bind(endPoint)
+        receivingClient.AllowNatTraversal(True)
         ThreadPool.QueueUserWorkItem(AddressOf Receiver) 'Start listener on another thread
         'For Chat
         receivingClientChat = New System.Net.Sockets.UdpClient()
         receivingClientChat.ExclusiveAddressUse = False
         receivingClientChat.Client.SetSocketOption(Net.Sockets.SocketOptionLevel.Socket, Net.Sockets.SocketOptionName.ReuseAddress, True)
         receivingClientChat.Client.Bind(endPointChat)
+        receivingClientChat.AllowNatTraversal(True)
         ThreadPool.QueueUserWorkItem(AddressOf RecieverChat) 'Start listener on another thread
         'For Sending Player Info
         receivingClientPlayerInfo = New System.Net.Sockets.UdpClient()
         receivingClientPlayerInfo.ExclusiveAddressUse = False
         receivingClientPlayerInfo.Client.SetSocketOption(Net.Sockets.SocketOptionLevel.Socket, Net.Sockets.SocketOptionName.ReuseAddress, True)
         receivingClientPlayerInfo.Client.Bind(endPointPlayerInfo)
+        receivingClientPlayerInfo.AllowNatTraversal(True)
         ThreadPool.QueueUserWorkItem(AddressOf RecieverPlayerInfo) 'Start listener on another thread
         'For is ready?
         receivingClientIsReady = New System.Net.Sockets.UdpClient()
         receivingClientIsReady.ExclusiveAddressUse = False
         receivingClientIsReady.Client.SetSocketOption(Net.Sockets.SocketOptionLevel.Socket, Net.Sockets.SocketOptionName.ReuseAddress, True)
         receivingClientIsReady.Client.Bind(endPointIsReady)
+        receivingClientIsReady.AllowNatTraversal(True)
         ThreadPool.QueueUserWorkItem(AddressOf RecieverIsReady) 'Start listener on another thread
         'For Assinging Cards over UDP
         receivingAssignedCards = New System.Net.Sockets.UdpClient()
         receivingAssignedCards.ExclusiveAddressUse = False
         receivingAssignedCards.Client.SetSocketOption(Net.Sockets.SocketOptionLevel.Socket, Net.Sockets.SocketOptionName.ReuseAddress, True)
         receivingAssignedCards.Client.Bind(endPointAssigningCards)
+        receivingAssignedCards.AllowNatTraversal(True)
         ThreadPool.QueueUserWorkItem(AddressOf RecieverAssigningCards) 'Start listener on another thread
         'For Card Changes
         receivingUpdateCardChanges = New System.Net.Sockets.UdpClient()
         receivingUpdateCardChanges.ExclusiveAddressUse = False
         receivingUpdateCardChanges.Client.SetSocketOption(Net.Sockets.SocketOptionLevel.Socket, Net.Sockets.SocketOptionName.ReuseAddress, True)
         receivingUpdateCardChanges.Client.Bind(endPointUpdateCardChanges)
+        receivingUpdateCardChanges.AllowNatTraversal(True)
         ThreadPool.QueueUserWorkItem(AddressOf RecieverUpdateCardChanges) 'Start listener on another thread
 
         Dim PlayerNum As String = thisPlayer.GetPlayerNumber.ToString()

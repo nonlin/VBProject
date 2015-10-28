@@ -287,6 +287,7 @@ Partial Class MainForm
         Me.Controls.Add(Me.Card7)
         Me.Controls.Add(Me.Card6)
         Me.Controls.Add(Me.Card5)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(300, 300)
         Me.Name = "MainForm"
         Me.Text = "One Night Ultimate WereWolf PC Edition 1.0 Beta"

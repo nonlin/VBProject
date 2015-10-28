@@ -1,11 +1,11 @@
-C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\VBProject.exe
-C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\VBProject.exe.config
-C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\VBProject.exe
-C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\VBProject.pdb
-C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\VBProject.xml
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\VBProject.MainForm.resources
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\VBProject.Resources.resources
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\VBProject.SettingsForm.resources
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\VBProject.vbproj.GenerateResource.Cache
-C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\VBProject.xml
-C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\VBProject.pdb
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\ONUW PC.exe.config
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\ONUW PC.exe
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\ONUW PC.pdb
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\ONUW PC.xml
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUW PC.exe
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUW PC.xml
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUW PC.pdb
