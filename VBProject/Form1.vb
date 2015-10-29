@@ -29,6 +29,7 @@ Public Class MainForm
     Dim characters As New Characters
     Dim isMaster As Boolean = False
     Dim Pos As Integer = 0
+    Dim StartRound As Boolean = True
     Private Delegate Sub UpdateTextBoxDelegate(ByVal txtBox As RichTextBox, ByVal value As String)
     Private Delegate Sub UpdateReadyMessage(ByVal txtBox As CheckBox, ByVal value As String)
     Private Delegate Sub EnableTimerDelegate(ByVal enable As Boolean)
@@ -555,6 +556,8 @@ Public Class MainForm
             'Starts Audio And Hides initial card
             StartRoundSetup(StringTime(1))
 
+
+
             'Only do turns during the night
             If Night Then
                 'Begin Players Turn according to time
@@ -571,7 +574,8 @@ Public Class MainForm
 
     End Sub
     Private Sub StartRoundSetup(ByVal SecondsPassed As String)
-        If SecondsPassed.Equals("5") Then
+        If SecondsPassed.Equals("5") And StartRound Then
+            StartRound = False
             Card1.Image = My.Resources.back
             If EnableAudio Then
                 My.Computer.Audio.Play(My.Resources.background_horror, AudioPlayMode.BackgroundLoop)
@@ -867,5 +871,23 @@ Public Class MainForm
     Private Sub Form1_FormClosing(sender As Object, e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         'Handles Disconnect
 
+    End Sub
+
+    Private Sub About_Click(sender As Object, e As EventArgs) Handles About.Click
+        MsgBox("As a fan of One Night Ultimate Werewolf this game was chosen to be recreated for the PC as a school project for a Visual Basic course." +
+               vbNewLine + vbNewLine + "Coded By George Erfesoglou" +
+               vbNewLine + vbNewLine + "All card art and background soundtrack property of Bezier Games, Inc." +
+               vbNewLine + "Orignal Game concept and idea by Bezier Games.", MsgBoxStyle.ApplicationModal, "About")
+    End Sub
+
+    Private Sub Instructions_Click(sender As Object, e As EventArgs) Handles Instructions.Click
+        MsgBox("Once at least 3 people have joined and have checked that they are ready, each player is randomly assigned a role that is revealed to them until the 5 second mark." +
+               vbNewLine + "Once the cards are shown and even while hidden you can click your card to reveal details about that cards ability and time to play." +
+               vbNewLine + vbNewLine + "The game is Humans vs Werewolfs, the Humans are trying to find and hunt the Werewolfs and the Werewolfs are trying to not get hunted" +
+               vbNewLine + vbNewLine + "Once everyone has preformed their action the inital game setup is over (Night) and the disccusion begins (Day)." +
+               vbNewLine + vbNewLine + "The timer resets and everyone is givin 5 minutes to figure out who is who and vote to kill whomever they beileve the Werewolf to be or convince the others otherwise." +
+               vbNewLine + vbNewLine + "Currently the voting can be done in chat by typing out the name of the person you want to kill before the 5 minute mark." +
+               vbNewLine + vbNewLine + "Once time is up all the cards are revealed and the player who recieved the most votes dies. In the case of ties all who tied die." +
+               vbNewLine + "So long as one Werewolf gets shot the Humans win regardless if a human had to die in the process. However, if no Werewolf dies the Humans lose.", MsgBoxStyle.Information, "Insturctions On How To Play")
     End Sub
 End Class

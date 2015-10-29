@@ -6,68 +6,68 @@ ONUWPC
 </name>
 </assembly>
 <members>
-<member name="P:VBProject.My.Resources.Resources.ResourceManager">
+<member name="P:ONUWPC.My.Resources.Resources.ResourceManager">
 	<summary>
   Returns the cached ResourceManager instance used by this class.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.Culture">
+</member><member name="P:ONUWPC.My.Resources.Resources.Culture">
 	<summary>
   Overrides the current thread's CurrentUICulture property for all
   resource lookups using this strongly typed resource class.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.back">
+</member><member name="P:ONUWPC.My.Resources.Resources.back">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.background_horror">
+</member><member name="P:ONUWPC.My.Resources.Resources.background_horror">
 	<summary>
   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.favicon">
+</member><member name="P:ONUWPC.My.Resources.Resources.favicon">
 	<summary>
   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.icon">
+</member><member name="P:ONUWPC.My.Resources.Resources.icon">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.night">
+</member><member name="P:ONUWPC.My.Resources.Resources.night">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.r">
+</member><member name="P:ONUWPC.My.Resources.Resources.r">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.s">
+</member><member name="P:ONUWPC.My.Resources.Resources.s">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.t">
+</member><member name="P:ONUWPC.My.Resources.Resources.t">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.v">
+</member><member name="P:ONUWPC.My.Resources.Resources.v">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.w">
+</member><member name="P:ONUWPC.My.Resources.Resources.w">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.wooddark">
+</member><member name="P:ONUWPC.My.Resources.Resources.wooddark">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.wooddark2">
+</member><member name="P:ONUWPC.My.Resources.Resources.wooddark2">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
-</member><member name="P:VBProject.My.Resources.Resources.woodlightdark">
+</member><member name="P:ONUWPC.My.Resources.Resources.woodlightdark">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
-</member><member name="T:VBProject.My.Resources.Resources">
+</member><member name="T:ONUWPC.My.Resources.Resources">
 	<summary>
   A strongly-typed resource class, for looking up localized strings, etc.
 </summary>

@@ -28,6 +28,7 @@ Partial Class SettingsForm
         Me.FontSizeLabel = New System.Windows.Forms.Label()
         Me.FontSizeValue = New System.Windows.Forms.TrackBar()
         Me.AudioCheckBox = New System.Windows.Forms.CheckBox()
+        Me.Cancel = New System.Windows.Forms.Button()
         CType(Me.FontSizeValue, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -51,7 +52,7 @@ Partial Class SettingsForm
         '
         'SaveButton
         '
-        Me.SaveButton.Location = New System.Drawing.Point(207, 253)
+        Me.SaveButton.Location = New System.Drawing.Point(105, 253)
         Me.SaveButton.Name = "SaveButton"
         Me.SaveButton.Size = New System.Drawing.Size(75, 23)
         Me.SaveButton.TabIndex = 2
@@ -89,11 +90,23 @@ Partial Class SettingsForm
         Me.AudioCheckBox.Text = "Enable Audio"
         Me.AudioCheckBox.UseVisualStyleBackColor = True
         '
+        'Cancel
+        '
+        Me.Cancel.Location = New System.Drawing.Point(207, 253)
+        Me.Cancel.MaximumSize = New System.Drawing.Size(75, 23)
+        Me.Cancel.MinimumSize = New System.Drawing.Size(75, 23)
+        Me.Cancel.Name = "Cancel"
+        Me.Cancel.Size = New System.Drawing.Size(75, 23)
+        Me.Cancel.TabIndex = 7
+        Me.Cancel.Text = "Cancel"
+        Me.Cancel.UseVisualStyleBackColor = True
+        '
         'SettingsForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(347, 288)
+        Me.Controls.Add(Me.Cancel)
         Me.Controls.Add(Me.AudioCheckBox)
         Me.Controls.Add(Me.FontSizeValue)
         Me.Controls.Add(Me.FontSizeLabel)
@@ -113,4 +126,5 @@ Partial Class SettingsForm
     Friend WithEvents FontSizeLabel As System.Windows.Forms.Label
     Friend WithEvents FontSizeValue As System.Windows.Forms.TrackBar
     Friend WithEvents AudioCheckBox As System.Windows.Forms.CheckBox
+    Friend WithEvents Cancel As System.Windows.Forms.Button
 End Class
