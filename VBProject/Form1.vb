@@ -116,7 +116,7 @@ Public Class MainForm
         CharacterList.Add("WereWolf")
         CharacterList.Add("WereWolf")
         CharacterList.Add("Seer")
-        CharacterList.Add("Viliger")
+        CharacterList.Add("Villager")
         CharacterList.Add("Robber")
         CharacterList.Add("TroubleMaker")
 
@@ -366,7 +366,7 @@ Public Class MainForm
         End If
     End Sub
     Private Sub WereWolfMiddleCardCheckLogic(ByVal cardNum As Integer)
-        If thisPlayer.GetCardType.Equals("WereWolf") And Not SawCard And OneWereWolf Then
+        If thisPlayer.GetCardType.Equals("WereWolf") And Not SawCard And OneWereWolf And TurnAllowed Then
             SawCard = True
             'Reveal the number middle middle cards card when clicked
             RevealMiddleCard(cardNum)
@@ -374,7 +374,7 @@ Public Class MainForm
         End If
     End Sub
     Private Sub SeerCardCheckTwoLogic(ByVal cardNum As Integer)
-        If thisPlayer.GetCardType.Equals("Seer") And Not SawCard And CardCount < 2 Then
+        If thisPlayer.GetCardType.Equals("Seer") And Not SawCard And TurnAllowed And CardCount < 2 Then
             CardCount = CardCount + 1
             'Reveal the number middle middle cards card when clicked
             RevealMiddleCard(cardNum)
@@ -388,7 +388,7 @@ Public Class MainForm
     Private Sub SeerCardCheckLogic(ByVal cardNum As Integer)
         'How many the seer can see
 
-        If thisPlayer.GetCardType.Equals("Seer") And Not SawCard Then
+        If thisPlayer.GetCardType.Equals("Seer") And Not SawCard And TurnAllowed Then
             SawCard = True
             'Reveal the number middle middle cards card when clicked
             RevealPlayerCard(cardNum)
@@ -468,9 +468,9 @@ Public Class MainForm
                 Case "Seer"
                     MsgBox("You are the " + thisPlayer.GetCardType + vbNewLine +
                          "The Seer has 5 seconds to see two of the middle cards, one other player's card or do nothing. Window of Action is 15 - 20 Seconds", , "About Your Card")
-                Case "Viliger"
+                Case "Villager"
                     MsgBox("You are the " + thisPlayer.GetCardType + vbNewLine +
-                        "The Viliger has no special powers, use your wits.", , "About Your Card")
+                        "The Villager has no special powers, use your wits.", , "About Your Card")
                 Case "Robber"
                     MsgBox("You are the " + thisPlayer.GetCardType + vbNewLine +
                         "The Robber has 5 seconds to switch cards with another player, viewing that other players card as a result or do nothing. Window of Action is 20 - 25 Seconds", , "About Your Card")
@@ -528,9 +528,10 @@ Public Class MainForm
             Dim StringTime() As String = Split(TimerLabel.Text, ":")
             'Starts Audio And Hides initial card
             StartRoundSetup(StringTime(1))
-
             'Only do turns during the night
             If Night Then
+                'Enable Turn Display
+                TurnLabel.Visible = True
                 'Begin Players Turn, Wolf Starts at 10, ends at 15
                 WereWolfTurnLogic()
                 'Seer at 15 starts, ends at 20
@@ -555,17 +556,18 @@ Public Class MainForm
             Dim StringTime() As String = Split(TimerLabel.Text, ":")
             'Starts Audio And Hides initial card
             StartRoundSetup(StringTime(1))
-
-
-
             'Only do turns during the night
             If Night Then
-                'Begin Players Turn according to time
+                'Enable Turn Display
+                TurnLabel.Visible = True
+                'Begin Players Turn, Wolf Starts at 10, ends at 15
                 WereWolfTurnLogic()
+                'Seer at 15 starts, ends at 20
                 SeerTurnLogic()
                 RobberTurnLogic()
                 TroubleMakerTurnLogic()
             Else
+                TurnLabel.Visible = False
                 RoundOverCheck()
             End If
 
@@ -600,11 +602,12 @@ Public Class MainForm
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
         'Werewolfs go first
         If StringTime(1).Equals("10") Then
-
+            TurnLabel.Text = "Werewolfs may be prowling..."
             'Only WereWolfs get to see other WereWolfs
             If thisPlayer.GetCardType.Contains("WereWolf") Then
-                For i As Integer = 1 To PlayerList.Count - 1
+                TurnAllowed = True
 
+                For i As Integer = 1 To PlayerList.Count - 1
                     If thisPlayer.GetCardType.Contains(PlayerList(i).GetCardType) Then
                         'If we are the same reveal card (WereWolf) show it
                         ListOfPlayerCards(i).Image = My.Resources.w
@@ -616,21 +619,27 @@ Public Class MainForm
         End If
 
         'Hide all Cards at specified time
-        If StringTime(1) >= 15 Then
+        If Convert.ToInt32(StringTime(1)) >= 15 And thisPlayer.GetCardType.Equals("WereWolf") Then
+            TurnAllowed = False
             HideAllCards()
         End If
+
     End Sub
 
     Private Sub SeerTurnLogic()
 
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
         If StringTime(1).Equals("15") Then
-            If thisPlayer.GetCardType.Equals("Seer") Then
 
+            TurnLabel.Text = "Seer may be seeing..."
+
+            If thisPlayer.GetCardType.Equals("Seer") Then
+                TurnAllowed = True
             End If
         End If
         'Hide Cards again
-        If StringTime(1) >= 20 Then
+        If Convert.ToInt32(StringTime(1)) >= 20 And thisPlayer.GetCardType.Equals("Seer") Then
+            TurnAllowed = False
             HideAllCards()
         End If
     End Sub
@@ -640,32 +649,34 @@ Public Class MainForm
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
         'When Robbers turn is up, he can make the switches
         If StringTime(1).Equals("20") Then
+            TurnLabel.Text = "Robber may be robbing..."
+
             If thisPlayer.GetCardType.Equals("Robber") Then
                 TurnAllowed = True
             End If
         End If
         'Hide Cards again
-        If StringTime(1) >= 25 Then
+        If Convert.ToInt32(StringTime(1)) >= 25 And thisPlayer.GetCardType.Equals("Robber") Then
             TurnAllowed = False
             HideAllCards()
         End If
-
     End Sub
-
     Private Sub TroubleMakerTurnLogic()
 
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
         'When Robbers turn is up, he can make the switches
         If StringTime(1).Equals("25") Then
+            TurnLabel.Text = "Someone may be causing trouble..."
             If thisPlayer.GetCardType.Equals("TroubleMaker") Then
                 TurnAllowed = True
             End If
         End If
-        'Hide Cards again
-        If StringTime(1) >= 30 Then
-            TurnAllowed = False
 
+        If Convert.ToInt32(StringTime(1)) >= 30 And thisPlayer.GetCardType.Equals("TroubleMaker") Then
+            TurnAllowed = False
         End If
+
+        'technically this goes to whomever is the last person to play
         If StringTime(1).Equals("35") Then
             'Me.Invoke(New RevealAllCardsDelegate(AddressOf RevealAllCards))
             'Reset Time, since its calle for both server and client master will get updated to update all clients
@@ -673,9 +684,7 @@ Public Class MainForm
             'So turns don't happen again
             Night = False
         End If
-
     End Sub
-
     Private Sub RoundOverCheck()
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
         If StringTime(0).Equals("5") Then
@@ -781,7 +790,7 @@ Public Class MainForm
         Select Case type
             Case "WereWolf"
                 Card1.Image = My.Resources.w
-            Case "Viliger"
+            Case "Villager"
                 Card1.Image = My.Resources.v
             Case "TroubleMaker"
                 Card1.Image = My.Resources.t
@@ -845,7 +854,7 @@ Public Class MainForm
             ListOfPlayerCards(i).Image = My.Resources.w
         ElseIf PlayerList(i).GetCardType.Contains("Seer") Then
             ListOfPlayerCards(i).Image = My.Resources.s
-        ElseIf PlayerList(i).GetCardType.Contains("Viliger") Then
+        ElseIf PlayerList(i).GetCardType.Contains("Villager") Then
             ListOfPlayerCards(i).Image = My.Resources.v
         ElseIf PlayerList(i).GetCardType.Contains("Robber") Then
             ListOfPlayerCards(i).Image = My.Resources.r
@@ -859,7 +868,7 @@ Public Class MainForm
             MiddleCardPicutreList(index).Image = My.Resources.w
         ElseIf MiddleCardsList(index).Contains("Seer") Then
             MiddleCardPicutreList(index).Image = My.Resources.s
-        ElseIf MiddleCardsList(index).Contains("Viliger") Then
+        ElseIf MiddleCardsList(index).Contains("Villager") Then
             MiddleCardPicutreList(index).Image = My.Resources.v
         ElseIf MiddleCardsList(index).Contains("Robber") Then
             MiddleCardPicutreList(index).Image = My.Resources.r
@@ -889,5 +898,6 @@ Public Class MainForm
                vbNewLine + vbNewLine + "Currently the voting can be done in chat by typing out the name of the person you want to kill before the 5 minute mark." +
                vbNewLine + vbNewLine + "Once time is up all the cards are revealed and the player who recieved the most votes dies. In the case of ties all who tied die." +
                vbNewLine + "So long as one Werewolf gets shot the Humans win regardless if a human had to die in the process. However, if no Werewolf dies the Humans lose.", MsgBoxStyle.Information, "Insturctions On How To Play")
+
     End Sub
 End Class

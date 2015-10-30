@@ -46,6 +46,7 @@ Partial Class MainForm
         Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
         Me.About = New System.Windows.Forms.Button()
         Me.Instructions = New System.Windows.Forms.Button()
+        Me.TurnLabel = New System.Windows.Forms.Label()
         CType(Me.Card4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Card3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Card1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -285,12 +286,27 @@ Partial Class MainForm
         Me.Instructions.Text = "Instructions"
         Me.Instructions.UseVisualStyleBackColor = True
         '
+        'TurnLabel
+        '
+        Me.TurnLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom
+        Me.TurnLabel.BackColor = System.Drawing.Color.Transparent
+        Me.TurnLabel.Font = New System.Drawing.Font("Viner Hand ITC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TurnLabel.ForeColor = System.Drawing.Color.DarkOrange
+        Me.TurnLabel.Location = New System.Drawing.Point(617, 621)
+        Me.TurnLabel.Name = "TurnLabel"
+        Me.TurnLabel.Size = New System.Drawing.Size(574, 46)
+        Me.TurnLabel.TabIndex = 24
+        Me.TurnLabel.Text = "Turn Display"
+        Me.TurnLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.TurnLabel.Visible = False
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.ClientSize = New System.Drawing.Size(1910, 969)
+        Me.Controls.Add(Me.TurnLabel)
         Me.Controls.Add(Me.Instructions)
         Me.Controls.Add(Me.About)
         Me.Controls.Add(Me.CardInfoLabel)
@@ -314,7 +330,7 @@ Partial Class MainForm
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(300, 300)
         Me.Name = "MainForm"
-        Me.Text = "One Night Ultimate WereWolf PC Edition 1.1 Beta"
+        Me.Text = "One Night Ultimate WereWolf PC Edition 1.1.2 Beta"
         CType(Me.Card4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Card3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Card1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -349,5 +365,6 @@ Partial Class MainForm
     Friend WithEvents CardInfoLabel As System.Windows.Forms.Label
     Friend WithEvents About As System.Windows.Forms.Button
     Friend WithEvents Instructions As System.Windows.Forms.Button
+    Friend WithEvents TurnLabel As System.Windows.Forms.Label
 
 End Class
