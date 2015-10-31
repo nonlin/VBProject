@@ -29,13 +29,16 @@ Partial Class SettingsForm
         Me.FontSizeValue = New System.Windows.Forms.TrackBar()
         Me.AudioCheckBox = New System.Windows.Forms.CheckBox()
         Me.Cancel = New System.Windows.Forms.Button()
+        Me.HostSettingsLabel = New System.Windows.Forms.Label()
+        Me.RoundTimeTextField = New System.Windows.Forms.TextBox()
+        Me.RoundLabel = New System.Windows.Forms.Label()
         CType(Me.FontSizeValue, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'PlayerNameField
         '
         Me.PlayerNameField.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PlayerNameField.Location = New System.Drawing.Point(172, 56)
+        Me.PlayerNameField.Location = New System.Drawing.Point(172, 26)
         Me.PlayerNameField.Name = "PlayerNameField"
         Me.PlayerNameField.Size = New System.Drawing.Size(110, 23)
         Me.PlayerNameField.TabIndex = 0
@@ -44,7 +47,7 @@ Partial Class SettingsForm
         '
         Me.PlayerNameLabel.AutoSize = True
         Me.PlayerNameLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PlayerNameLabel.Location = New System.Drawing.Point(12, 59)
+        Me.PlayerNameLabel.Location = New System.Drawing.Point(12, 29)
         Me.PlayerNameLabel.Name = "PlayerNameLabel"
         Me.PlayerNameLabel.Size = New System.Drawing.Size(114, 20)
         Me.PlayerNameLabel.TabIndex = 1
@@ -63,7 +66,7 @@ Partial Class SettingsForm
         '
         Me.FontSizeLabel.AutoSize = True
         Me.FontSizeLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.FontSizeLabel.Location = New System.Drawing.Point(12, 99)
+        Me.FontSizeLabel.Location = New System.Drawing.Point(12, 69)
         Me.FontSizeLabel.Name = "FontSizeLabel"
         Me.FontSizeLabel.Size = New System.Drawing.Size(134, 20)
         Me.FontSizeLabel.TabIndex = 3
@@ -71,7 +74,7 @@ Partial Class SettingsForm
         '
         'FontSizeValue
         '
-        Me.FontSizeValue.Location = New System.Drawing.Point(172, 99)
+        Me.FontSizeValue.Location = New System.Drawing.Point(172, 69)
         Me.FontSizeValue.Maximum = 14
         Me.FontSizeValue.Minimum = 8
         Me.FontSizeValue.Name = "FontSizeValue"
@@ -83,7 +86,7 @@ Partial Class SettingsForm
         '
         Me.AudioCheckBox.AutoSize = True
         Me.AudioCheckBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.AudioCheckBox.Location = New System.Drawing.Point(172, 150)
+        Me.AudioCheckBox.Location = New System.Drawing.Point(172, 129)
         Me.AudioCheckBox.Name = "AudioCheckBox"
         Me.AudioCheckBox.Size = New System.Drawing.Size(135, 24)
         Me.AudioCheckBox.TabIndex = 6
@@ -101,11 +104,41 @@ Partial Class SettingsForm
         Me.Cancel.Text = "Cancel"
         Me.Cancel.UseVisualStyleBackColor = True
         '
+        'HostSettingsLabel
+        '
+        Me.HostSettingsLabel.AutoSize = True
+        Me.HostSettingsLabel.Location = New System.Drawing.Point(13, 154)
+        Me.HostSettingsLabel.Name = "HostSettingsLabel"
+        Me.HostSettingsLabel.Size = New System.Drawing.Size(207, 13)
+        Me.HostSettingsLabel.TabIndex = 8
+        Me.HostSettingsLabel.Text = "Master Settings (Only Master Can Change)"
+        '
+        'RoundTimeTextField
+        '
+        Me.RoundTimeTextField.Enabled = False
+        Me.RoundTimeTextField.Location = New System.Drawing.Point(172, 179)
+        Me.RoundTimeTextField.Name = "RoundTimeTextField"
+        Me.RoundTimeTextField.Size = New System.Drawing.Size(31, 20)
+        Me.RoundTimeTextField.TabIndex = 9
+        '
+        'RoundLabel
+        '
+        Me.RoundLabel.AutoSize = True
+        Me.RoundLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RoundLabel.Location = New System.Drawing.Point(12, 177)
+        Me.RoundLabel.Name = "RoundLabel"
+        Me.RoundLabel.Size = New System.Drawing.Size(110, 20)
+        Me.RoundLabel.TabIndex = 10
+        Me.RoundLabel.Text = "Round Time:"
+        '
         'SettingsForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(347, 288)
+        Me.Controls.Add(Me.RoundLabel)
+        Me.Controls.Add(Me.RoundTimeTextField)
+        Me.Controls.Add(Me.HostSettingsLabel)
         Me.Controls.Add(Me.Cancel)
         Me.Controls.Add(Me.AudioCheckBox)
         Me.Controls.Add(Me.FontSizeValue)
@@ -127,4 +160,7 @@ Partial Class SettingsForm
     Friend WithEvents FontSizeValue As System.Windows.Forms.TrackBar
     Friend WithEvents AudioCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents Cancel As System.Windows.Forms.Button
+    Friend WithEvents HostSettingsLabel As System.Windows.Forms.Label
+    Friend WithEvents RoundTimeTextField As System.Windows.Forms.TextBox
+    Friend WithEvents RoundLabel As System.Windows.Forms.Label
 End Class

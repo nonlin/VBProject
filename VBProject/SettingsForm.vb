@@ -1,6 +1,6 @@
 ﻿Public Class SettingsForm
     Private player = New Player()
-
+    Private RoundTime As Integer
     Public Sub New(ByVal p As Player)
         InitializeComponent()
         player = p
@@ -12,17 +12,37 @@
         Me.MaximizeBox = False
         Me.MinimizeBox = False
     End Sub
-
+    Private Sub SettingsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If MainForm.GetIsMaster Then
+            RoundTimeTextField.Enabled = True
+        Else
+            RoundTimeTextField.Enabled = False
+        End If
+        RoundTimeTextField.Text = MainForm.GetRoundTime
+    End Sub
     Private Sub PlayerNameTextBox_TextChanged(sender As Object, e As EventArgs) Handles PlayerNameField.TextChanged
 
     End Sub
 
     Private Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
         player.SetPlayerName(PlayerNameField.Text)
+        'if the name has changed then we need to update everyone on the change
+        If Not player.GetPlayername.Equals(PlayerNameField.Text) Then
+            MainForm.NameChanged()
+        End If
+        MainForm.NameChanged()
         player.SetFontSize(FontSizeValue.Value)
         MainForm.UpdateSettings(AudioCheckBox.Checked)
         MainForm.EnableSettingsButton()
-        Me.Hide()
+        If Not RoundLabel.Text Is Nothing And Integer.TryParse(RoundTimeTextField.Text, RoundTime) And RoundTime > 0 Then
+            If MainForm.GetIsMaster Then
+                MainForm.SetRoundTime(RoundTimeTextField.Text)
+            End If
+            Me.Hide()
+        Else
+            MsgBox("Please insert a time greater than 0.", MsgBoxStyle.Critical, "Input Error")
+        End If
+
 
 
     End Sub
@@ -39,5 +59,9 @@
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
         MainForm.EnableSettingsButton()
         Me.Close()
+    End Sub
+
+    Private Sub RoundTimeTextField_TextChanged(sender As Object, e As EventArgs) Handles RoundTimeTextField.TextChanged
+
     End Sub
 End Class

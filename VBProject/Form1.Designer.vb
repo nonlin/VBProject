@@ -47,6 +47,7 @@ Partial Class MainForm
         Me.About = New System.Windows.Forms.Button()
         Me.Instructions = New System.Windows.Forms.Button()
         Me.TurnLabel = New System.Windows.Forms.Label()
+        Me.VoteMenuButton = New System.Windows.Forms.Button()
         CType(Me.Card4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Card3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Card1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -135,7 +136,7 @@ Partial Class MainForm
         Me.PlayerName2.AutoSize = True
         Me.PlayerName2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.PlayerName2.Font = New System.Drawing.Font("Papyrus", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PlayerName2.Location = New System.Drawing.Point(361, 36)
+        Me.PlayerName2.Location = New System.Drawing.Point(385, 38)
         Me.PlayerName2.Name = "PlayerName2"
         Me.PlayerName2.Size = New System.Drawing.Size(201, 40)
         Me.PlayerName2.TabIndex = 17
@@ -147,7 +148,7 @@ Partial Class MainForm
         Me.PlayerName3.AutoSize = True
         Me.PlayerName3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.PlayerName3.Font = New System.Drawing.Font("Papyrus", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PlayerName3.Location = New System.Drawing.Point(993, 36)
+        Me.PlayerName3.Location = New System.Drawing.Point(1017, 38)
         Me.PlayerName3.Name = "PlayerName3"
         Me.PlayerName3.Size = New System.Drawing.Size(201, 40)
         Me.PlayerName3.TabIndex = 18
@@ -159,7 +160,7 @@ Partial Class MainForm
         Me.PlayerName1.AutoSize = True
         Me.PlayerName1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.PlayerName1.Font = New System.Drawing.Font("Papyrus", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PlayerName1.Location = New System.Drawing.Point(993, 729)
+        Me.PlayerName1.Location = New System.Drawing.Point(1014, 737)
         Me.PlayerName1.Name = "PlayerName1"
         Me.PlayerName1.Size = New System.Drawing.Size(201, 40)
         Me.PlayerName1.TabIndex = 19
@@ -172,7 +173,7 @@ Partial Class MainForm
         Me.PlayerName4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.PlayerName4.Font = New System.Drawing.Font("Papyrus", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.PlayerName4.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.PlayerName4.Location = New System.Drawing.Point(1598, 36)
+        Me.PlayerName4.Location = New System.Drawing.Point(1622, 38)
         Me.PlayerName4.Name = "PlayerName4"
         Me.PlayerName4.Size = New System.Drawing.Size(201, 40)
         Me.PlayerName4.TabIndex = 20
@@ -183,7 +184,7 @@ Partial Class MainForm
         Me.CardInfoLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom
         Me.CardInfoLabel.AutoSize = True
         Me.CardInfoLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CardInfoLabel.Location = New System.Drawing.Point(990, 784)
+        Me.CardInfoLabel.Location = New System.Drawing.Point(1011, 792)
         Me.CardInfoLabel.Name = "CardInfoLabel"
         Me.CardInfoLabel.Size = New System.Drawing.Size(180, 20)
         Me.CardInfoLabel.TabIndex = 21
@@ -194,7 +195,7 @@ Partial Class MainForm
         '
         Me.Card4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Card4.InitialImage = CType(resources.GetObject("Card4.InitialImage"), System.Drawing.Image)
-        Me.Card4.Location = New System.Drawing.Point(1442, 36)
+        Me.Card4.Location = New System.Drawing.Point(1466, 38)
         Me.Card4.Name = "Card4"
         Me.Card4.Size = New System.Drawing.Size(150, 205)
         Me.Card4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -205,7 +206,7 @@ Partial Class MainForm
         '
         Me.Card3.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.Card3.InitialImage = CType(resources.GetObject("Card3.InitialImage"), System.Drawing.Image)
-        Me.Card3.Location = New System.Drawing.Point(824, 36)
+        Me.Card3.Location = New System.Drawing.Point(848, 38)
         Me.Card3.Name = "Card3"
         Me.Card3.Size = New System.Drawing.Size(150, 205)
         Me.Card3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -216,7 +217,7 @@ Partial Class MainForm
         '
         Me.Card1.Anchor = System.Windows.Forms.AnchorStyles.Bottom
         Me.Card1.InitialImage = CType(resources.GetObject("Card1.InitialImage"), System.Drawing.Image)
-        Me.Card1.Location = New System.Drawing.Point(824, 729)
+        Me.Card1.Location = New System.Drawing.Point(845, 737)
         Me.Card1.Name = "Card1"
         Me.Card1.Size = New System.Drawing.Size(150, 205)
         Me.Card1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -226,7 +227,7 @@ Partial Class MainForm
         'Card2
         '
         Me.Card2.InitialImage = CType(resources.GetObject("Card2.InitialImage"), System.Drawing.Image)
-        Me.Card2.Location = New System.Drawing.Point(204, 36)
+        Me.Card2.Location = New System.Drawing.Point(228, 38)
         Me.Card2.Name = "Card2"
         Me.Card2.Size = New System.Drawing.Size(150, 205)
         Me.Card2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -237,7 +238,7 @@ Partial Class MainForm
         '
         Me.Card7.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Card7.InitialImage = CType(resources.GetObject("Card7.InitialImage"), System.Drawing.Image)
-        Me.Card7.Location = New System.Drawing.Point(1041, 347)
+        Me.Card7.Location = New System.Drawing.Point(1062, 317)
         Me.Card7.Name = "Card7"
         Me.Card7.Size = New System.Drawing.Size(150, 205)
         Me.Card7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -248,7 +249,7 @@ Partial Class MainForm
         '
         Me.Card6.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Card6.InitialImage = CType(resources.GetObject("Card6.InitialImage"), System.Drawing.Image)
-        Me.Card6.Location = New System.Drawing.Point(824, 347)
+        Me.Card6.Location = New System.Drawing.Point(845, 317)
         Me.Card6.Name = "Card6"
         Me.Card6.Size = New System.Drawing.Size(150, 205)
         Me.Card6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -259,7 +260,7 @@ Partial Class MainForm
         '
         Me.Card5.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Card5.InitialImage = CType(resources.GetObject("Card5.InitialImage"), System.Drawing.Image)
-        Me.Card5.Location = New System.Drawing.Point(617, 347)
+        Me.Card5.Location = New System.Drawing.Point(638, 317)
         Me.Card5.Name = "Card5"
         Me.Card5.Size = New System.Drawing.Size(150, 205)
         Me.Card5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -292,13 +293,24 @@ Partial Class MainForm
         Me.TurnLabel.BackColor = System.Drawing.Color.Transparent
         Me.TurnLabel.Font = New System.Drawing.Font("Viner Hand ITC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TurnLabel.ForeColor = System.Drawing.Color.DarkOrange
-        Me.TurnLabel.Location = New System.Drawing.Point(617, 621)
+        Me.TurnLabel.Location = New System.Drawing.Point(641, 577)
         Me.TurnLabel.Name = "TurnLabel"
-        Me.TurnLabel.Size = New System.Drawing.Size(574, 46)
+        Me.TurnLabel.Size = New System.Drawing.Size(574, 132)
         Me.TurnLabel.TabIndex = 24
         Me.TurnLabel.Text = "Turn Display"
         Me.TurnLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.TurnLabel.Visible = False
+        '
+        'VoteMenuButton
+        '
+        Me.VoteMenuButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom
+        Me.VoteMenuButton.Font = New System.Drawing.Font("Palatino Linotype", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.VoteMenuButton.Location = New System.Drawing.Point(1015, 826)
+        Me.VoteMenuButton.Name = "VoteMenuButton"
+        Me.VoteMenuButton.Size = New System.Drawing.Size(176, 35)
+        Me.VoteMenuButton.TabIndex = 25
+        Me.VoteMenuButton.Text = "Vote Menu"
+        Me.VoteMenuButton.UseVisualStyleBackColor = True
         '
         'MainForm
         '
@@ -306,6 +318,7 @@ Partial Class MainForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.ClientSize = New System.Drawing.Size(1910, 969)
+        Me.Controls.Add(Me.VoteMenuButton)
         Me.Controls.Add(Me.TurnLabel)
         Me.Controls.Add(Me.Instructions)
         Me.Controls.Add(Me.About)
@@ -330,7 +343,7 @@ Partial Class MainForm
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(300, 300)
         Me.Name = "MainForm"
-        Me.Text = "One Night Ultimate WereWolf PC Edition 1.1.2 Beta"
+        Me.Text = "One Night Ultimate WereWolf PC Edition 1.2 Beta"
         CType(Me.Card4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Card3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Card1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -366,5 +379,6 @@ Partial Class MainForm
     Friend WithEvents About As System.Windows.Forms.Button
     Friend WithEvents Instructions As System.Windows.Forms.Button
     Friend WithEvents TurnLabel As System.Windows.Forms.Label
+    Friend WithEvents VoteMenuButton As System.Windows.Forms.Button
 
 End Class

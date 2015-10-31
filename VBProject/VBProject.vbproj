@@ -124,6 +124,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Sound.vb" />
+    <Compile Include="VoteMenuForm.Designer.vb">
+      <DependentUpon>VoteMenuForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VoteMenuForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form1.resx">
@@ -137,6 +143,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsForm.resx">
       <DependentUpon>SettingsForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VoteMenuForm.resx">
+      <DependentUpon>VoteMenuForm.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

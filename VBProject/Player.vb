@@ -5,6 +5,7 @@
     Private PlayerName As String
     Private FontSize As Integer = 10
     Private UniquePlayerID As String = ""
+    Private VoteCount As Integer = 0
 
     Public Sub New(ByVal num As Integer, ByVal type As String, ByVal name As String)
 
@@ -66,4 +67,19 @@
     Public Sub SetPlayerCardType(ByVal type As String)
         CardType = type
     End Sub
+
+    Public Sub AddVote()
+        VoteCount = VoteCount + 1
+    End Sub
+
+    Public Sub SetVoteCount(ByVal vote As Integer)
+        VoteCount = vote
+    End Sub
+
+    Public ReadOnly Property GetVoteCount()
+        Get
+            Return VoteCount
+        End Get
+    End Property
+
 End Class

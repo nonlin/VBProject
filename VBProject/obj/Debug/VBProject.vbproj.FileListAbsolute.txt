@@ -1,11 +1,12 @@
-C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\VBProject.vbproj.GenerateResource.Cache
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\ONUW PC.exe.config
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\ONUW PC.exe
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\ONUW PC.pdb
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\ONUW PC.xml
-C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUW PC.exe
-C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUW PC.xml
-C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUW PC.pdb
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUWPC.MainForm.resources
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUWPC.Resources.resources
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUWPC.SettingsForm.resources
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\VBProject.vbproj.GenerateResource.Cache
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUW PC.exe
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUW PC.xml
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUW PC.pdb
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUWPC.VoteMenuForm.resources

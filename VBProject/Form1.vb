@@ -30,11 +30,13 @@ Public Class MainForm
     Dim isMaster As Boolean = False
     Dim Pos As Integer = 0
     Dim StartRound As Boolean = True
+    Private RoundTime As String = "2"
     Private Delegate Sub UpdateTextBoxDelegate(ByVal txtBox As RichTextBox, ByVal value As String)
     Private Delegate Sub UpdateReadyMessage(ByVal txtBox As CheckBox, ByVal value As String)
     Private Delegate Sub EnableTimerDelegate(ByVal enable As Boolean)
     Private Delegate Sub UpdateTimerLabelText(ByVal timeText As String)
     Private Delegate Sub GameSetUpDelegate(ByVal type As String)
+    Private Delegate Sub SetPlayerNameLabelsDelegate()
     Private Delegate Sub RevealAllCardsDelegate()
 
     Dim randomIntegerID As Integer = 0
@@ -46,6 +48,9 @@ Public Class MainForm
     Dim CardCount As Integer = 0
     Dim TurnAllowed As Boolean = False
     Dim TMFirstPickIndex = -1
+    Dim RobbersNewRole As String = "Robber"
+    'Forms
+    Dim VMF As VoteMenuForm = New VoteMenuForm(PlayerList)
     'Network Related Variables
     Private Const port As Integer = 9653 'Or whatever port number you want to use
     Private Const broadcastAddress As String = "255.255.255.255"
@@ -108,7 +113,7 @@ Public Class MainForm
         ListOfPlayerCards.Add(Card2)
         ListOfPlayerCards.Add(Card3)
         ListOfPlayerCards.Add(Card4)
-        'MIddle Cards
+        'Middle Cards
         MiddleCardPicutreList.Add(Card5)
         MiddleCardPicutreList.Add(Card6)
         MiddleCardPicutreList.Add(Card7)
@@ -201,7 +206,8 @@ Public Class MainForm
         ThreadPool.QueueUserWorkItem(AddressOf RecieverUpdateCardChanges) 'Start listener on another thread
 
         Dim PlayerNum As String = thisPlayer.GetPlayerNumber.ToString()
-        'Dim PlayerData As Byte = Convert.ToByte(PlayerList)
+
+        'Send First Connect (Initial) Player Data to anyone that is litsening 
         Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName() + "<>" + thisPlayer.GetCardType + "<>" + PlayerNum + "<>" + randomIntegerID.ToString + "<>" + isMaster.ToString + "<>" + "InitialSend")
         sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
 
@@ -231,12 +237,11 @@ Public Class MainForm
             Dim StringArray() As String = Split(message, "<>")
             Dim PlayerCount = 0
 
-            'Ignore messaes from self
+            'Ignore messages from self
             If Not StringArray(3).Equals(randomIntegerID.ToString) Then
                 recievedID = StringArray(3)
 
                 For i As Integer = 0 To PlayerList.Count - 1
-
                     If PlayerList(i).GetUniquePlayerID.Equals(recievedID) Then
                         'If Player already exists in list don't add him again
                         PlayerExists = True
@@ -246,11 +251,11 @@ Public Class MainForm
                     End If
                 Next
 
-                'if player does not exist add him
+                'if player does not exist add him, sensitive area to have this given all the calls 
                 If Not PlayerExists Then
                     Dim NewPlayer As Player = New Player(PlayerCount + 1, StringArray(1), StringArray(0))
                     NewPlayer.SetUniquePlayerID(recievedID)
-                    UpdateTextBox(ChatBox, "Player " + StringArray(0) + " Joined. ID of " + StringArray(3))
+                    UpdateTextBox(ChatBox, "Player " + StringArray(0) + " Joined.")
                     'UpdateTextBox(ChatBox, "Player Count is " + NewPlayer.GetPlayerNumber.ToString)
                     'UpdateTextBox(ChatBox, "Player ip is " + endPoint.ToString())
 
@@ -265,7 +270,6 @@ Public Class MainForm
                     sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
                     'Everyone starts off as not being a master (false) so long as no one sends true then make themselves true
                 End If
-
                 If StringArray(5).Contains("ReSend") Then
                     isMasterList.Add(StringArray(4))
                     For i As Integer = 0 To isMasterList.Count - 1
@@ -276,7 +280,37 @@ Public Class MainForm
                             isMaster = True
                         End If
                     Next
+                    If isMaster Then
+                        'Update those who joined with RoundTime, in case round time is changed before they connected 
+                        Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName() + "<>" + thisPlayer.GetCardType + "<>" + "-" + "<>" + randomIntegerID.ToString + "<>" + isMaster.ToString + "<>" + "UpdateRoundTimeLimit" + "<>" + RoundTime)
+                        sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
+                    End If
                 End If
+            End If
+            'Recieves any name changes
+            If StringArray(5).Contains("NameChanged") Then
+                For i As Integer = 0 To PlayerList.Count - 1
+                    If PlayerList(i).GetUniquePlayerID.Equals(StringArray(3)) Then
+                        PlayerList(i).SetPlayerName(StringArray(0))
+                    End If
+                Next
+                Me.Invoke(New SetPlayerNameLabelsDelegate(AddressOf SetPlayerNameLabels))
+            End If
+            'Recieves Updated Round Time
+            If StringArray(5).Contains("UpdateRoundTimeLimit") Then
+                'if round time is not the same update otherwise ignore
+                If Not StringArray(6).Equals(RoundTime) Then
+                    RoundTime = StringArray(6)
+                    UpdateTextBox(ChatBox, "Round Time Set to " + RoundTime + " minutes.")
+                End If
+            End If
+
+            If StringArray(5).Contains("UpdateKillVotes") Then
+                For i As Integer = 0 To PlayerList.Count - 1
+                    If StringArray(3).Equals(PlayerList(i).GetUniquePlayerID) Then
+                        PlayerList(i).AddVote()
+                    End If
+                Next
             End If
 
             'if/when we have enough player we can enable the ready option
@@ -284,9 +318,11 @@ Public Class MainForm
                 UpdateReadyText(ReadyToStart, "Ready To Start?")
             End If
 
-            'When Master Start Timer, Clients then set their timer label to match the string time being sent everys second
-            If isMaster Then
-                'Me.Invoke(New EnableTimerDelegate(AddressOf EnableTimerDlg), New Object() {True})
+            'Since we have a master tell everyone who is master, but do it once on InitialSend
+            If isMaster And StringArray(5).Contains("InitialSend") Then
+                UpdateTextBox(ChatBox, "You are Master.")
+                Dim data2() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName & " is Master.")
+                sendingClientChat.Send(data2, data2.Length)
             Else
 
             End If
@@ -294,6 +330,11 @@ Public Class MainForm
         Loop
 
 
+    End Sub
+    Public Sub NameChanged()
+        Dim PlayerNum As String = thisPlayer.GetPlayerNumber.ToString()
+        Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName() + "<>" + thisPlayer.GetCardType + "<>" + PlayerNum + "<>" + randomIntegerID.ToString + "<>" + isMaster.ToString + "<>" + "NameChanged")
+        sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
     End Sub
     Private Sub RecieverChat()
 
@@ -401,9 +442,9 @@ Public Class MainForm
             'Reveal cards first
             RevealPlayerCard(cardNum)
             'Swap player role's logic
-            Dim TempRole = PlayerList(cardNum).GetCardType
+            RobbersNewRole = PlayerList(cardNum).GetCardType
             PlayerList(cardNum).SetPlayerCardType(thisPlayer.GetCardType)
-            thisPlayer.SetPlayerCardType(TempRole)
+            thisPlayer.SetPlayerCardType(RobbersNewRole)
             'send out New Robber ID and then Robberes New identity with Id 0 - 1 2  
             Dim data() As Byte = Encoding.ASCII.GetBytes(PlayerList(cardNum).GetCardType + "<>" + PlayerList(cardNum).GetUniquePlayerID + "<>" + thisPlayer.GetCardType + "<>" + thisPlayer.GetUniquePlayerID)
             sendingUpdateCardChanges.Send(data, data.Length)
@@ -522,27 +563,7 @@ Public Class MainForm
             timeData = Encoding.ASCII.GetBytes(TimerLabel.Text)
             sendingClient.Send(timeData, timeData.Length)
         End If
-
-        'Check Timer Text to Trigger Events at certain times
-        If Not TimerLabel.Text.Contains("Timer") Then
-            Dim StringTime() As String = Split(TimerLabel.Text, ":")
-            'Starts Audio And Hides initial card
-            StartRoundSetup(StringTime(1))
-            'Only do turns during the night
-            If Night Then
-                'Enable Turn Display
-                TurnLabel.Visible = True
-                'Begin Players Turn, Wolf Starts at 10, ends at 15
-                WereWolfTurnLogic()
-                'Seer at 15 starts, ends at 20
-                SeerTurnLogic()
-                RobberTurnLogic()
-                TroubleMakerTurnLogic()
-            Else
-                RoundOverCheck()
-            End If
-        End If
-
+        BeginRound()
     End Sub
     Private Sub EnableTimerDlg(ByVal Enable As Boolean)
         GameTime.Enabled = Enable
@@ -550,7 +571,10 @@ Public Class MainForm
     'Only Clients Update Timer through Text sent by master
     Private Sub UpdateTimerTextDlg(ByVal timerText As String)
         TimerLabel.Text = timerText
+        BeginRound()
 
+    End Sub
+    Private Sub BeginRound()
         'Check Timer Text to Trigger Events at certain times
         If Not TimerLabel.Text.Contains("Timer") Then
             Dim StringTime() As String = Split(TimerLabel.Text, ":")
@@ -567,13 +591,12 @@ Public Class MainForm
                 RobberTurnLogic()
                 TroubleMakerTurnLogic()
             Else
-                TurnLabel.Visible = False
+                Me.BackgroundImage = My.Resources.wooddark
+                TurnLabel.Text = "Night is over, day is among you."
+                TurnLabel.ForeColor = Color.WhiteSmoke
                 RoundOverCheck()
             End If
-
-
         End If
-
     End Sub
     Private Sub StartRoundSetup(ByVal SecondsPassed As String)
         If SecondsPassed.Equals("5") And StartRound Then
@@ -655,8 +678,8 @@ Public Class MainForm
                 TurnAllowed = True
             End If
         End If
-        'Hide Cards again
-        If Convert.ToInt32(StringTime(1)) >= 25 And thisPlayer.GetCardType.Equals("Robber") Then
+        'Hide Cards again, since robber changes role we have to check for the role he becomes
+        If Convert.ToInt32(StringTime(1)) >= 25 And thisPlayer.GetCardType.Equals(RobbersNewRole) Then
             TurnAllowed = False
             HideAllCards()
         End If
@@ -687,11 +710,57 @@ Public Class MainForm
     End Sub
     Private Sub RoundOverCheck()
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
-        If StringTime(0).Equals("5") Then
+        If StringTime(0).Equals(RoundTime) Then
             Me.Invoke(New RevealAllCardsDelegate(AddressOf RevealAllCards))
+            'Prevent any more votes from being casted
+            VMF.Disable_CheckBoxes()
+            'First find those with greatest or equal votes add them to the to die list
+            Dim listOfPlayersWhoDie As New List(Of Player)
+            Dim tempPlayer = New Player(0, "", "")
+            'Find the perosn with the most votes
+            For i As Integer = 0 To PlayerList.Count - 1
+                If PlayerList(i).GetVoteCount > tempPlayer.GetVoteCount Then
+                    tempPlayer = PlayerList(i)
+
+                End If
+            Next
+            'then check to see if any other votes equal the person with the most and add all those ( to handle ties)
+            For i As Integer = 0 To PlayerList.Count - 1
+                If PlayerList(i).GetVoteCount.Equals(tempPlayer.GetVoteCount) Then
+                    listOfPlayersWhoDie.Add(PlayerList(i))
+                    UpdateTextBox(ChatBox, "Added, " + PlayerList(i).GetPlayerName)
+                End If
+            Next
+            'then show who died on screen
+            For i As Integer = 0 To listOfPlayersWhoDie.Count - 1
+                UpdateTextBox(ChatBox, listOfPlayersWhoDie(i).GetPlayerName + " Got Shot!")
+                'Optionally we could update a label with the information
+                'TurnLabel.Text = TurnLabel.Text + vbNewLine + listOfPlayersWhoDie(i).GetPlayerName + " Got Shot!"
+            Next
+            TurnLabel.Text = "Round Over, See Chat For Results!"
+            'Stop Timer
+            If isMaster Then
+                GameTime.Enabled = False
+            End If
         End If
         CardInfoLabel.Visible = False
     End Sub
+    Public Sub SetRoundTime(ByVal time As String)
+        RoundTime = time
+        'Send to other players the new round time
+        Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName() + "<>" + thisPlayer.GetCardType + "<>" + "-" + "<>" + randomIntegerID.ToString + "<>" + isMaster.ToString + "<>" + "UpdateRoundTimeLimit" + "<>" + time)
+        sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
+    End Sub
+    Public ReadOnly Property GetRoundTime()
+        Get
+            Return RoundTime
+        End Get
+    End Property
+    Public ReadOnly Property GetIsMaster()
+        Get
+            Return isMaster
+        End Get
+    End Property
     Private Sub ReadyToStart_CheckedChanged(sender As Object, e As EventArgs) Handles ReadyToStart.CheckedChanged
 
         Dim stringToSend As String = thisPlayer.GetPlayerName() + " is Ready." + "<>" + randomIntegerID.ToString()
@@ -699,7 +768,7 @@ Public Class MainForm
 
             Dim data() As Byte = Encoding.ASCII.GetBytes(stringToSend)
             sendingClientIsReady.Send(data, data.Length)
-
+            ReadyToStart.Enabled = False
         End If
     End Sub
     'We Assign Cards whenever is ready, Master Assigns and updates everyone
@@ -720,8 +789,8 @@ Public Class MainForm
                 'UpdateTextBox(ChatBox, "DEBUG " + isReadyList.Count.ToString)
                 'More than 3 Players and same amounnt of player that have joined our ready we can start timer
                 If isReadyList.Count >= 3 And isReadyList.Count = PlayerList.Count Then
-                    'Me.Invoke(New EnableTimerDelegate(AddressOf EnableTimerDlg), New Object() {True})
-                    UpdateTextBox(ChatBox, "ALL READY " + isReadyList.Count.ToString)
+
+                    'UpdateTextBox(ChatBox, "ALL READY " + isReadyList.Count.ToString)
                     'Prep Random Seeds
                     Randomize()
                     Dim r As Random = New Random()
@@ -805,13 +874,16 @@ Public Class MainForm
         End If
 
         'if We have a player for the card set player name for card
+        Me.Invoke(New SetPlayerNameLabelsDelegate(AddressOf SetPlayerNameLabels))
+        CardInfoLabel.Visible = True
+
+    End Sub
+    Private Sub SetPlayerNameLabels()
         For i As Integer = 1 To PlayerList.Count - 1
             If Not PlayerList(i) Is Nothing Then
                 ListOfPlayerNameLabels(i).Text = PlayerList(i).GetPlayerName
             End If
         Next
-        CardInfoLabel.Visible = True
-
     End Sub
 
     Private Sub RecieverUpdateCardChanges()
@@ -899,5 +971,16 @@ Public Class MainForm
                vbNewLine + vbNewLine + "Once time is up all the cards are revealed and the player who recieved the most votes dies. In the case of ties all who tied die." +
                vbNewLine + "So long as one Werewolf gets shot the Humans win regardless if a human had to die in the process. However, if no Werewolf dies the Humans lose.", MsgBoxStyle.Information, "Insturctions On How To Play")
 
+    End Sub
+
+    Private Sub VoteMenuButton_Click(sender As Object, e As EventArgs) Handles VoteMenuButton.Click
+        VMF.SetPlayerList(PlayerList)
+        VMF.Show()
+    End Sub
+
+    Public Sub SendVoteToEveryone(ByVal playreVotedFor As Player)
+        'Update Everyone's vote to everyone else
+        Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(playreVotedFor.GetPlayerName() + "<>" + playreVotedFor.GetCardType + "<>" + "-" + "<>" + playreVotedFor.GetUniquePlayerID.ToString + "<>" + "-" + "<>" + "UpdateKillVotes")
+        sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
     End Sub
 End Class
