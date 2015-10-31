@@ -290,6 +290,26 @@ Public Class MainForm
                         sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
                     End If
                 End If
+                'INdex out of range error when more than one user disconnects at the same time
+                If StringArray(5).Contains("Disconnected") Then
+
+                    For i As Integer = 1 To PlayerCount
+                        If StringArray(3).Equals(PlayerList(i).GetUniquePlayerID) Then
+                            UpdateTextBox(ChatBox, "Player " + PlayerList(i).GetPlayerName + " has disconnected.")
+                            PlayerList.RemoveAt(i)
+                            PlayerCount = PlayerCount - 1
+                        End If
+                    Next
+                    For i As Integer = 0 To isReadyList.Count - 1
+                        'player left and is no longer ready
+                        If StringArray(3).Equals(isReadyList(i)) Then
+                            isReadyList.RemoveAt(i)
+                        End If
+                    Next
+                    If PlayerList.Count < 3 Then
+                        UpdateReadyText(ReadyToStart, "Not Enough Players To Start")
+                    End If
+                End If
             End If
             'Recieves any name changes
             If StringArray(5).Contains("NameChanged") Then
@@ -321,16 +341,7 @@ Public Class MainForm
                 'Just call to increment the vote count
                 Me.Invoke(New VoteToEndRoundDelegate(AddressOf VoteToEndRound))
             End If
-            'INdex out of range error when more than one user disconnects at the same time
-            If StringArray(5).Contains("Disconnected") Then
-                For i As Integer = 0 To PlayerList.Count - 1
-                        If StringArray(3).Equals(PlayerList(i).GetUniquePlayerID) Then
-                            UpdateTextBox(ChatBox, "Player " + PlayerList(i).GetPlayerName + " has disconnected.")
-                            PlayerList.RemoveAt(i)
-                        End If
 
-                Next
-            End If
             'Calls restart round method which essentially brings everything back to the original values
             If StringArray(5).Contains("RestartRound") Then
                 Me.Invoke(New RestartRoundDelegate(AddressOf RestartRound))
@@ -422,13 +433,20 @@ Public Class MainForm
             Pos = 0
         End If
     End Sub
-    Private Sub UpdateReadyText(ByVal checkBox As CheckBox, ByVal value As String)
-        If checkBox.InvokeRequired Then
+    Private Sub UpdateReadyText(ByVal ReadyCheckBox As CheckBox, ByVal value As String)
+        If ReadyCheckBox.InvokeRequired Then
             'make delegate
-            ReadyToStart.Invoke(New UpdateReadyMessage(AddressOf UpdateReadyText), checkBox, value)
+            ReadyToStart.Invoke(New UpdateReadyMessage(AddressOf UpdateReadyText), ReadyCheckBox, value)
         Else
-            checkBox.Enabled = True
-            checkBox.Text = "Ready To Start?"
+            If value.Equals("Ready To Start?") Then
+                ReadyCheckBox.Enabled = True
+                ReadyCheckBox.Text = value
+            ElseIf value.Equals("Not Enough Players To Start") Then
+                ReadyCheckBox.Enabled = False
+                ReadyCheckBox.Checked = False
+                ReadyCheckBox.Text = value
+            End If
+
         End If
     End Sub
     Private Sub WereWolfMiddleCardCheckLogic(ByVal cardNum As Integer)
