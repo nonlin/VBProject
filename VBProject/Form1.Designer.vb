@@ -48,6 +48,7 @@ Partial Class MainForm
         Me.Instructions = New System.Windows.Forms.Button()
         Me.TurnLabel = New System.Windows.Forms.Label()
         Me.VoteMenuButton = New System.Windows.Forms.Button()
+        Me.RestartRoundButton = New System.Windows.Forms.Button()
         CType(Me.Card4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Card3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Card1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -307,10 +308,22 @@ Partial Class MainForm
         Me.VoteMenuButton.Font = New System.Drawing.Font("Palatino Linotype", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.VoteMenuButton.Location = New System.Drawing.Point(1015, 826)
         Me.VoteMenuButton.Name = "VoteMenuButton"
-        Me.VoteMenuButton.Size = New System.Drawing.Size(176, 35)
+        Me.VoteMenuButton.Size = New System.Drawing.Size(140, 35)
         Me.VoteMenuButton.TabIndex = 25
         Me.VoteMenuButton.Text = "Vote Menu"
         Me.VoteMenuButton.UseVisualStyleBackColor = True
+        '
+        'RestartRoundButton
+        '
+        Me.RestartRoundButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom
+        Me.RestartRoundButton.Enabled = False
+        Me.RestartRoundButton.Font = New System.Drawing.Font("Palatino Linotype", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RestartRoundButton.Location = New System.Drawing.Point(1017, 878)
+        Me.RestartRoundButton.Name = "RestartRoundButton"
+        Me.RestartRoundButton.Size = New System.Drawing.Size(140, 35)
+        Me.RestartRoundButton.TabIndex = 26
+        Me.RestartRoundButton.Text = "Restart Round"
+        Me.RestartRoundButton.UseVisualStyleBackColor = True
         '
         'MainForm
         '
@@ -318,6 +331,7 @@ Partial Class MainForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.ClientSize = New System.Drawing.Size(1910, 969)
+        Me.Controls.Add(Me.RestartRoundButton)
         Me.Controls.Add(Me.VoteMenuButton)
         Me.Controls.Add(Me.TurnLabel)
         Me.Controls.Add(Me.Instructions)
@@ -343,7 +357,7 @@ Partial Class MainForm
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(300, 300)
         Me.Name = "MainForm"
-        Me.Text = "One Night Ultimate WereWolf PC Edition 1.2 Beta"
+        Me.Text = "One Night Ultimate WereWolf PC Edition 1.2.1 Beta"
         CType(Me.Card4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Card3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Card1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -380,5 +394,6 @@ Partial Class MainForm
     Friend WithEvents Instructions As System.Windows.Forms.Button
     Friend WithEvents TurnLabel As System.Windows.Forms.Label
     Friend WithEvents VoteMenuButton As System.Windows.Forms.Button
+    Friend WithEvents RestartRoundButton As System.Windows.Forms.Button
 
 End Class

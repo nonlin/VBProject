@@ -31,6 +31,8 @@ Public Class MainForm
     Dim Pos As Integer = 0
     Dim StartRound As Boolean = True
     Private RoundTime As String = "2"
+    Dim voteCount As Integer = 0
+    Dim EndRoundVotePassed = False
     Private Delegate Sub UpdateTextBoxDelegate(ByVal txtBox As RichTextBox, ByVal value As String)
     Private Delegate Sub UpdateReadyMessage(ByVal txtBox As CheckBox, ByVal value As String)
     Private Delegate Sub EnableTimerDelegate(ByVal enable As Boolean)
@@ -38,6 +40,8 @@ Public Class MainForm
     Private Delegate Sub GameSetUpDelegate(ByVal type As String)
     Private Delegate Sub SetPlayerNameLabelsDelegate()
     Private Delegate Sub RevealAllCardsDelegate()
+    Private Delegate Sub VoteToEndRoundDelegate()
+    Private Delegate Sub RestartRoundDelegate()
 
     Dim randomIntegerID As Integer = 0
     Dim Time As Integer = 0
@@ -124,7 +128,7 @@ Public Class MainForm
         CharacterList.Add("Villager")
         CharacterList.Add("Robber")
         CharacterList.Add("TroubleMaker")
-
+        TurnLabel.Text = ""
         'Prevents Window Flickers from resizing, on launch or moving
         Me.DoubleBuffered = True
         'Prevent Form from being to sized to small,
@@ -313,6 +317,26 @@ Public Class MainForm
                 Next
             End If
 
+            If StringArray(5).Contains("UpdateVotesToEndRound") Then
+                'Just call to increment the vote count
+                Me.Invoke(New VoteToEndRoundDelegate(AddressOf VoteToEndRound))
+            End If
+            'INdex out of range error when more than one user disconnects at the same time
+            If StringArray(5).Contains("Disconnected") Then
+                For i As Integer = 0 To PlayerList.Count - 1
+                        If StringArray(3).Equals(PlayerList(i).GetUniquePlayerID) Then
+                            UpdateTextBox(ChatBox, "Player " + PlayerList(i).GetPlayerName + " has disconnected.")
+                            PlayerList.RemoveAt(i)
+                        End If
+
+                Next
+            End If
+            'Calls restart round method which essentially brings everything back to the original values
+            If StringArray(5).Contains("RestartRound") Then
+                Me.Invoke(New RestartRoundDelegate(AddressOf RestartRound))
+                UpdateTextBox(ChatBox, "Master Restarted Round.")
+            End If
+
             'if/when we have enough player we can enable the ready option
             If PlayerList.Count >= 3 Then
                 UpdateReadyText(ReadyToStart, "Ready To Start?")
@@ -321,6 +345,7 @@ Public Class MainForm
             'Since we have a master tell everyone who is master, but do it once on InitialSend
             If isMaster And StringArray(5).Contains("InitialSend") Then
                 UpdateTextBox(ChatBox, "You are Master.")
+                RestartRoundButton.Enabled = True
                 Dim data2() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName & " is Master.")
                 sendingClientChat.Send(data2, data2.Length)
             Else
@@ -710,7 +735,7 @@ Public Class MainForm
     End Sub
     Private Sub RoundOverCheck()
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
-        If StringTime(0).Equals(RoundTime) Then
+        If StringTime(0).Equals(RoundTime) Or EndRoundVotePassed Then
             Me.Invoke(New RevealAllCardsDelegate(AddressOf RevealAllCards))
             'Prevent any more votes from being casted
             VMF.Disable_CheckBoxes()
@@ -951,7 +976,7 @@ Public Class MainForm
 
     Private Sub Form1_FormClosing(sender As Object, e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         'Handles Disconnect
-
+        Disconnect()
     End Sub
 
     Private Sub About_Click(sender As Object, e As EventArgs) Handles About.Click
@@ -982,5 +1007,62 @@ Public Class MainForm
         'Update Everyone's vote to everyone else
         Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(playreVotedFor.GetPlayerName() + "<>" + playreVotedFor.GetCardType + "<>" + "-" + "<>" + playreVotedFor.GetUniquePlayerID.ToString + "<>" + "-" + "<>" + "UpdateKillVotes")
         sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
+    End Sub
+    Public Sub SendVotesToEndRound()
+        Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName() + "<>" + thisPlayer.GetCardType + "<>" + "-" + "<>" + thisPlayer.GetUniquePlayerID.ToString + "<>" + "-" + "<>" + "UpdateVotesToEndRound")
+        sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
+    End Sub
+    Public Sub VoteToEndRound()
+
+        voteCount = voteCount + 1
+        If voteCount = PlayerList.Count Then
+            EndRoundVotePassed = True
+        End If
+    End Sub
+    Public Sub Disconnect()
+        Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName() + "<>" + thisPlayer.GetCardType + "<>" + "-" + "<>" + thisPlayer.GetUniquePlayerID.ToString + "<>" + "-" + "<>" + "Disconnected")
+        sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
+    End Sub
+    Public Sub RestartRound()
+        isReadyList.Clear()
+        GameTime.Enabled = False
+        RoundStarted = False
+        Me.BackgroundImage = My.Resources.wooddark
+        StartRound = True
+        voteCount = 0
+        EndRoundVotePassed = False
+
+        Time = 0
+        Night = True
+
+        SawCard = False
+        OneWereWolf = False
+        CardCount = 0
+        TurnAllowed = False
+        TMFirstPickIndex = -1
+        RobbersNewRole = "Robber"
+
+        'Add Characters to list back since they were removed when they were assigned
+        CharacterList.Add("WereWolf")
+        CharacterList.Add("WereWolf")
+        CharacterList.Add("Seer")
+        CharacterList.Add("Villager")
+        CharacterList.Add("Robber")
+        CharacterList.Add("TroubleMaker")
+        'Enable the ready again
+        ReadyToStart.Enabled = True
+        ReadyToStart.Checked = False
+        TimerLabel.Text = "Timer"
+        TurnLabel.Text = ""
+        My.Computer.Audio.Stop()
+        'Hide All Cards, Some may have shown depending on when restarted
+        HideAllCards()
+    End Sub
+
+    Private Sub RestartRoundButton_Click(sender As Object, e As EventArgs) Handles RestartRoundButton.Click
+        If isMaster Then
+            Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName() + "<>" + thisPlayer.GetCardType + "<>" + "-" + "<>" + randomIntegerID.ToString + "<>" + isMaster.ToString + "<>" + "RestartRound")
+            sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
+        End If
     End Sub
 End Class

@@ -33,7 +33,6 @@
             CheckBoxList(i - 1).Text = "Kill " + PlayerList(i).GetPlayerName
         Next
     End Sub
-
     Public Sub SetPlayerList(ByVal PL As List(Of Player))
         PlayerList = PL
     End Sub
@@ -49,7 +48,6 @@
         MainForm.SendVoteToEveryone(PlayerList(1))
         Disable_CheckBoxes()
     End Sub
-
     Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
         'PlayerList(2).AddVote()
         MainForm.SendVoteToEveryone(PlayerList(2))
@@ -61,20 +59,17 @@
         MainForm.SendVoteToEveryone(PlayerList(3))
         Disable_CheckBoxes()
     End Sub
-
     Private Sub CheckBox4_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox4.CheckedChanged
         'PlayerList(4).AddVote()
         MainForm.SendVoteToEveryone(PlayerList(4))
         Disable_CheckBoxes()
     End Sub
-
     Private Sub EndRoundCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles EndRoundCheckBox.CheckedChanged
-
+        MainForm.SendVotesToEndRound()
+        EndRoundCheckBox.Enabled = False
     End Sub
-
     Private Sub VoteMenuForm_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.FormClosing
         Me.Hide()
         e.Cancel = True
     End Sub
-
 End Class
