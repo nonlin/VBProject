@@ -16,6 +16,7 @@ Public Class MainForm
     Dim isReadyList As New List(Of String)
     Dim MiddleCardsList As New List(Of String)
     Dim MiddleCardPicutreList As New List(Of PictureBox)
+    Dim RolePlayTime As New Dictionary(Of String, Integer)
 
     'List of all player lables to assign later
     Dim ListOfPlayerNameLabels As New List(Of Label)
@@ -34,6 +35,7 @@ Public Class MainForm
     Dim voteCount As Integer = 0
     Dim EndRoundVotePassed = False
     Dim TurnTime As Integer = 10
+    Dim InitialRole As String = ""
     Private Delegate Sub UpdateTextBoxDelegate(ByVal txtBox As RichTextBox, ByVal value As String)
     Private Delegate Sub UpdateReadyMessage(ByVal txtBox As CheckBox, ByVal value As String)
     Private Delegate Sub EnableTimerDelegate(ByVal enable As Boolean)
@@ -45,10 +47,20 @@ Public Class MainForm
     Private Delegate Sub RestartRoundDelegate()
     Private Delegate Sub SetRestartButtonDelegate(ByVal Enabled As Boolean)
     Private Delegate Sub EnableNewCardForPlayerDelegate(ByVal index As Integer)
+    'Roll Time Variables, Might want to make into its own class
+    Dim TimeMulti As Integer = 0
 
+    Dim WWFound As Boolean = False
+    Dim MFound As Boolean = False
+    Dim SFound As Boolean = False
+    Dim RFound As Boolean = False
+    Dim TMFound As Boolean = False
+    Dim DFound As Boolean = False
+    Dim IFound As Boolean = False
+    'More Game Vairables
     Dim randomIntegerID As Integer = 0
     Dim Time As Integer = 0
-    Dim Night = True
+    Dim Night = False
     'Card Turn Boolean Checks
     Dim SawCard As Boolean = False
     Dim OneWereWolf As Boolean = False
@@ -495,7 +507,7 @@ Public Class MainForm
         End If
     End Sub
     Private Sub WereWolfMiddleCardCheckLogic(ByVal cardNum As Integer)
-        If thisPlayer.GetCardType.Equals("WereWolf") And Not SawCard And OneWereWolf And TurnAllowed Then
+        If InitialRole.Equals("WereWolf") And Not SawCard And OneWereWolf And TurnAllowed Then
             SawCard = True
             'Reveal the number middle middle cards card when clicked
             RevealMiddleCard(cardNum)
@@ -503,7 +515,7 @@ Public Class MainForm
         End If
     End Sub
     Private Sub SeerCardCheckTwoLogic(ByVal cardNum As Integer)
-        If thisPlayer.GetCardType.Equals("Seer") And Not SawCard And TurnAllowed And CardCount < 2 Then
+        If InitialRole.Equals("Seer") And Not SawCard And TurnAllowed And CardCount < 2 Then
             CardCount = CardCount + 1
             'Reveal the number middle middle cards card when clicked
             RevealMiddleCard(cardNum)
@@ -517,7 +529,7 @@ Public Class MainForm
     Private Sub SeerCardCheckLogic(ByVal cardNum As Integer)
         'How many the seer can see
 
-        If thisPlayer.GetCardType.Equals("Seer") And Not SawCard And TurnAllowed Then
+        If InitialRole.Equals("Seer") And Not SawCard And TurnAllowed Then
             SawCard = True
             'Reveal the number middle middle cards card when clicked
             RevealPlayerCard(cardNum)
@@ -525,7 +537,7 @@ Public Class MainForm
 
     End Sub
     Private Sub RobberCardSwitchLogic(ByVal cardNum As Integer)
-        If thisPlayer.GetCardType.Equals("Robber") And TurnAllowed Then
+        If InitialRole.Equals("Robber") And TurnAllowed Then
             TurnAllowed = False 'Turn is over once Robber picks a person to swap with
             'Reveal cards first
             RevealPlayerCard(cardNum)
@@ -541,7 +553,7 @@ Public Class MainForm
     End Sub
     Private Sub TroubleMakerCardSwitchLogic(ByVal cardNum As Integer)
 
-        If thisPlayer.GetCardType.Equals("TroubleMaker") And TurnAllowed Then
+        If InitialRole.Equals("TroubleMaker") And TurnAllowed Then
             If TMFirstPickIndex > 0 Then
                 TurnAllowed = False
                 'Means we have picked two people to swap, same swap logic for robber, same process too
@@ -659,6 +671,7 @@ Public Class MainForm
         'Check Timer Text to Trigger Events at certain times
         If Not TimerLabel.Text.Contains("Timer") Then
             Dim StringTime() As String = Split(TimerLabel.Text, ":")
+
             'Starts Audio And Hides initial card
             StartRoundSetup(StringTime(1))
             'Only do turns during the night
@@ -671,7 +684,8 @@ Public Class MainForm
                 SeerTurnLogic()
                 RobberTurnLogic()
                 TroubleMakerTurnLogic()
-            Else
+                EndOfTurnsLogic()
+            ElseIf Not Night And RoundStarted Then
                 Me.BackgroundImage = My.Resources.wooddark
                 TurnLabel.Text = "Night is over, day is among you."
                 TurnLabel.ForeColor = Color.WhiteSmoke
@@ -681,6 +695,8 @@ Public Class MainForm
     End Sub
     Private Sub StartRoundSetup(ByVal SecondsPassed As String)
         If SecondsPassed.Equals("5") And StartRound Then
+            'Before we even start round assign each turn their time to play
+            TurnTimeCalcuator()
             StartRound = False
             RoundStarted = True
             VoteMenuButton.Enabled = True
@@ -689,6 +705,7 @@ Public Class MainForm
                 My.Computer.Audio.Play(My.Resources.background_horror, AudioPlayMode.BackgroundLoop)
             End If
             Me.BackgroundImage = My.Resources.night
+            Night = True
         End If
         'If later user disables the audio stop it
         If Not EnableAudio Then
@@ -703,18 +720,72 @@ Public Class MainForm
             MiddleCardPicutreList(i).Image = My.Resources.back
         Next
     End Sub
+    Private Sub TurnTimeCalcuator()
+
+        'Look through CharacterList to determine which are in play and then each rolls time is dependent on the amount of rolls that play before it
+        'We use the bools to check to make sure we ignore any double cards that might be in play
+        For i As Integer = 0 To CharacterList.Count - 1
+            If CharacterList(i).Equals("WereWolf") And Not WWFound Then
+                RolePlayTime.Add("WereWolf", TurnTime)
+                TimeMulti = TimeMulti + 1
+                WWFound = True
+                Continue For
+            End If
+            If CharacterList(i).Equals("Minion") And Not MFound Then
+                RolePlayTime.Add("Minion", TurnTime + (5 * TimeMulti))
+                TimeMulti = TimeMulti + 1
+                MFound = True
+                Continue For
+            End If
+            If CharacterList(i).Equals("Seer") And Not SFound Then
+                RolePlayTime.Add("Seer", TurnTime + (5 * TimeMulti))
+                TimeMulti = TimeMulti + 1
+                SFound = True
+                Continue For
+            End If
+            If CharacterList(i).Equals("Robber") And Not RFound Then
+                RolePlayTime.Add("Robber", TurnTime + (5 * TimeMulti))
+                TimeMulti = TimeMulti + 1
+                RFound = True
+                Continue For
+            End If
+            If CharacterList(i).Equals("TroubleMaker") And Not TMFound Then
+                RolePlayTime.Add("TroubleMaker", TurnTime + (5 * TimeMulti))
+                TimeMulti = TimeMulti + 1
+                TMFound = True
+                Continue For
+            End If
+            If CharacterList(i).Equals("Drunk") And Not DFound Then
+                RolePlayTime.Add("Drunk", TurnTime + (5 * TimeMulti))
+                TimeMulti = TimeMulti + 1
+                DFound = True
+                Continue For
+            End If
+            If CharacterList(i).Equals("Insomniac") And Not IFound Then
+                RolePlayTime.Add("Insomniac", TurnTime + (5 * TimeMulti))
+                TimeMulti = TimeMulti + 1
+                IFound = True
+                Continue For
+            End If
+        Next
+
+    End Sub
+    Private Sub EndOfTurnLogic()
+        TurnAllowed = False
+        HideAllCards()
+    End Sub
     Private Sub WereWolfTurnLogic()
         'Check Timer Text to Trigger Events at certain times
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
         'Werewolfs go first
-        If StringTime(1).Equals("10") Then
+        If StringTime(1).Equals(RolePlayTime.Item("WereWolf").ToString) Then
             TurnLabel.Text = "Werewolfs may be prowling..."
             'Only WereWolfs get to see other WereWolfs
-            If thisPlayer.GetCardType.Contains("WereWolf") Then
+            If InitialRole.Contains("WereWolf") Then
                 TurnAllowed = True
 
                 For i As Integer = 1 To PlayerList.Count - 1
-                    If thisPlayer.GetCardType.Contains(PlayerList(i).GetCardType) Then
+                    If InitialRole.Contains(PlayerList(i).GetCardType) Then
                         'If we are the same reveal card (WereWolf) show it
                         ListOfPlayerCards(i).Image = My.Resources.w
                         'since a card was revealed 
@@ -725,28 +796,24 @@ Public Class MainForm
         End If
 
         'Hide all Cards at specified time
-        If Convert.ToInt32(StringTime(1)) >= 15 And thisPlayer.GetCardType.Equals("WereWolf") Then
+        If Convert.ToInt32(StringTime(1)) >= (RolePlayTime.Item("WereWolf") + 5) And InitialRole.Equals("WereWolf") Then
             EndOfTurnLogic()
         End If
 
     End Sub
-    Private Sub EndOfTurnLogic()
-        TurnAllowed = False
-        HideAllCards()
-    End Sub
     Private Sub SeerTurnLogic()
 
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
-        If StringTime(1).Equals("15") Then
+        If StringTime(1).Equals(RolePlayTime.Item("Seer").ToString) Then
 
             TurnLabel.Text = "Seer may be seeing..."
 
-            If thisPlayer.GetCardType.Equals("Seer") Then
+            If InitialRole.Equals("Seer") Then
                 TurnAllowed = True
             End If
         End If
         'Hide Cards again
-        If Convert.ToInt32(StringTime(1)) >= 20 And thisPlayer.GetCardType.Equals("Seer") Then
+        If Convert.ToInt32(StringTime(1)) >= (RolePlayTime.Item("Seer") + 5) And InitialRole.Equals("Seer") Then
             EndOfTurnLogic()
         End If
     End Sub
@@ -755,15 +822,15 @@ Public Class MainForm
 
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
         'When Robbers turn is up, he can make the switches
-        If StringTime(1).Equals("20") Then
+        If StringTime(1).Equals(RolePlayTime.Item("Robber").ToString) Then
             TurnLabel.Text = "Robber may be robbing..."
 
-            If thisPlayer.GetCardType.Equals("Robber") Then
+            If InitialRole.Equals("Robber") Then
                 TurnAllowed = True
             End If
         End If
         'Hide Cards again, since robber changes role we have to check for the role he becomes
-        If Convert.ToInt32(StringTime(1)) >= 25 And thisPlayer.GetCardType.Equals(RobbersNewRole) Then
+        If Convert.ToInt32(StringTime(1)) >= ((RolePlayTime.Item("Robber")) + 5) And InitialRole.Equals("Robber") Then
             EndOfTurnLogic()
         End If
     End Sub
@@ -771,19 +838,21 @@ Public Class MainForm
 
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
         'When Robbers turn is up, he can make the switches
-        If StringTime(1).Equals("25") Then
+        If StringTime(1).Equals(RolePlayTime.Item("TroubleMaker").ToString) Then
             TurnLabel.Text = "Someone may be causing trouble..."
-            If thisPlayer.GetCardType.Equals("TroubleMaker") Then
+            If InitialRole.Equals("TroubleMaker") Then
                 TurnAllowed = True
             End If
         End If
 
-        If Convert.ToInt32(StringTime(1)) >= 30 And thisPlayer.GetCardType.Equals("TroubleMaker") Then
+        If Convert.ToInt32(StringTime(1)) >= ((RolePlayTime.Item("TroubleMaker")) + 5) And InitialRole.Equals("TroubleMaker") Then
             EndOfTurnLogic()
         End If
-
-        'technically this goes to whomever is the last person to play
-        If StringTime(1).Equals("35") Then
+    End Sub
+    Private Sub EndOfTurnsLogic()
+        Dim StringTime() As String = Split(TimerLabel.Text, ":")
+        'Round time is last values added to dictinoary plus 5 sesconds after
+        If StringTime(1).Equals((RolePlayTime.Values.Last + 5).ToString) Then
             'Me.Invoke(New RevealAllCardsDelegate(AddressOf RevealAllCards))
             'Reset Time, since its calle for both server and client master will get updated to update all clients
             Time = 0
@@ -866,7 +935,8 @@ Public Class MainForm
             UpdateTextBox(ChatBox, StringArray(0))
             'If We are master and everyone is ready start the timer/Game
             If isMaster Then
-
+                'We need  a new list to mess with so that Calculating Turns can use the original list before we remove roles 
+                Dim RoleList As New List(Of String)(CharacterList)
                 isReadyList.Add(StringArray(1))
                 'UpdateTextBox(ChatBox, "DEBUG " + isReadyList.Count.ToString)
                 'More than 3 Players and same amounnt of player that have joined our ready we can start timer
@@ -879,20 +949,20 @@ Public Class MainForm
                     'Send a message for each player
                     For i As Integer = 0 To isReadyList.Count - 1
 
-                        Dim randomChar As Integer = r.Next(0, CharacterList.Count - 1) 'CInt(Int((CharacterList.Count - 1 * Rnd()) + 0))
-                        Dim stringToSend As String = CharacterList(randomChar) + "<>" + isReadyList(i)
+                        Dim randomChar As Integer = r.Next(0, RoleList.Count - 1) 'CInt(Int((RoleList.Count - 1 * Rnd()) + 0))
+                        Dim stringToSend As String = RoleList(randomChar) + "<>" + isReadyList(i)
                         Dim data2() As Byte = Encoding.ASCII.GetBytes(stringToSend)
                         sendingAssignedCards.Send(data2, data2.Length)
-                        CharacterList.RemoveAt(randomChar)
+                        RoleList.RemoveAt(randomChar)
                     Next
                     'assign the last 3 remaining middle cards
                     For j As Integer = 1 To 3
 
-                        Dim randomChar As Integer = r.Next(0, CharacterList.Count - 1) 'Dim randomChar As Integer = CInt(Int((CharacterList.Count - 1 * Rnd()) + 0))
-                        Dim stringToSend As String = CharacterList(randomChar) + "<>" + j.ToString()
+                        Dim randomChar As Integer = r.Next(0, RoleList.Count - 1) 'Dim randomChar As Integer = CInt(Int((RoleList.Count - 1 * Rnd()) + 0))
+                        Dim stringToSend As String = RoleList(randomChar) + "<>" + j.ToString()
                         Dim data2() As Byte = Encoding.ASCII.GetBytes(stringToSend)
                         sendingAssignedCards.Send(data2, data2.Length)
-                        CharacterList.RemoveAt(randomChar)
+                        RoleList.RemoveAt(randomChar)
                     Next
                 End If
             End If
@@ -913,6 +983,8 @@ Public Class MainForm
                     PlayerList(i).SetPlayerCardType(StringArray(0))
                 End If
                 thisPlayer = PlayerList(0)
+                'Set initalRole to refer back to since cards may get switched
+                InitialRole = thisPlayer.GetCardType
                 'UpdateTextBox(ChatBox, PlayerList(i).GetPlayerName() + " " + PlayerList(i).GetCardType)
             Next
 
@@ -1090,10 +1162,10 @@ Public Class MainForm
         StartRound = True
         voteCount = 0
         EndRoundVotePassed = False
-
+        RolePlayTime.Clear()
         Time = 0
         Night = True
-
+        TimeMulti = 0
         SawCard = False
         OneWereWolf = False
         CardCount = 0

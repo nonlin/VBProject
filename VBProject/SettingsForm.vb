@@ -13,6 +13,7 @@
         Me.MinimumSize = Me.MaximumSize
         Me.MaximizeBox = False
         Me.MinimizeBox = False
+        RolesLeftLabel.Text = "Roles Left: " + (((MainForm.GetPlayerList.Count + 3) - 1) - RoleCount).ToString
     End Sub
     Private Sub SettingsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If MainForm.GetIsMaster Then
@@ -75,6 +76,7 @@
             If Not RoleComboBox.SelectedItem.ToString.Equals("") Then
                 MainForm.UpdateCharacterList(RoleComboBox.SelectedItem.ToString)
                 RoleCount = RoleCount + 1
+                RolesLeftLabel.Text = "Roles Left: " + (((MainForm.GetPlayerList.Count + 3) - 1) - RoleCount).ToString
             Else
                 MsgBox("Please pick a role from the list to add.", MsgBoxStyle.Critical, "Error - Role Not Selected")
             End If

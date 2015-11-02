@@ -23,6 +23,10 @@ ONUWPC
 	<summary>
   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
 </summary>
+</member><member name="P:ONUWPC.My.Resources.Resources.drunk">
+	<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
 </member><member name="P:ONUWPC.My.Resources.Resources.favicon">
 	<summary>
   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).

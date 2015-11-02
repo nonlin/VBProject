@@ -35,6 +35,7 @@ Partial Class SettingsForm
         Me.RoleComboBox = New System.Windows.Forms.ComboBox()
         Me.AddRolesLabel = New System.Windows.Forms.Label()
         Me.AddRoleButton = New System.Windows.Forms.Button()
+        Me.RolesLeftLabel = New System.Windows.Forms.Label()
         CType(Me.FontSizeValue, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -147,7 +148,7 @@ Partial Class SettingsForm
         Me.RoleComboBox.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.RoleComboBox.FormattingEnabled = True
         Me.RoleComboBox.Items.AddRange(New Object() {"Drunk", "Hunter", "Insomniac", "Minion", "Tanner", "Villager"})
-        Me.RoleComboBox.Location = New System.Drawing.Point(172, 223)
+        Me.RoleComboBox.Location = New System.Drawing.Point(172, 226)
         Me.RoleComboBox.Name = "RoleComboBox"
         Me.RoleComboBox.Size = New System.Drawing.Size(110, 21)
         Me.RoleComboBox.Sorted = True
@@ -166,18 +167,29 @@ Partial Class SettingsForm
         'AddRoleButton
         '
         Me.AddRoleButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.AddRoleButton.Location = New System.Drawing.Point(304, 223)
+        Me.AddRoleButton.Location = New System.Drawing.Point(302, 226)
         Me.AddRoleButton.Name = "AddRoleButton"
         Me.AddRoleButton.Size = New System.Drawing.Size(41, 23)
         Me.AddRoleButton.TabIndex = 13
         Me.AddRoleButton.Text = "Add"
         Me.AddRoleButton.UseVisualStyleBackColor = True
         '
+        'RolesLeftLabel
+        '
+        Me.RolesLeftLabel.AutoSize = True
+        Me.RolesLeftLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RolesLeftLabel.Location = New System.Drawing.Point(27, 244)
+        Me.RolesLeftLabel.Name = "RolesLeftLabel"
+        Me.RolesLeftLabel.Size = New System.Drawing.Size(95, 18)
+        Me.RolesLeftLabel.TabIndex = 14
+        Me.RolesLeftLabel.Text = "Roles Left: "
+        '
         'SettingsForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(367, 367)
+        Me.Controls.Add(Me.RolesLeftLabel)
         Me.Controls.Add(Me.AddRoleButton)
         Me.Controls.Add(Me.AddRolesLabel)
         Me.Controls.Add(Me.RoleComboBox)
@@ -211,4 +223,5 @@ Partial Class SettingsForm
     Friend WithEvents RoleComboBox As System.Windows.Forms.ComboBox
     Friend WithEvents AddRolesLabel As System.Windows.Forms.Label
     Friend WithEvents AddRoleButton As System.Windows.Forms.Button
+    Friend WithEvents RolesLeftLabel As System.Windows.Forms.Label
 End Class
