@@ -4,7 +4,7 @@
     Dim PlayerList As New List(Of Player)
     Public Sub New(ByVal PL As List(Of Player))
         InitializeComponent()
-        Me.MaximumSize = New Size(480, 340)
+        Me.MaximumSize = New Size(470, 500)
         Me.MinimumSize = Me.MaximumSize
         Me.MaximizeBox = False
         Me.MinimizeBox = False
@@ -13,6 +13,11 @@
         CheckBoxList.Add(CheckBox2)
         CheckBoxList.Add(CheckBox3)
         CheckBoxList.Add(CheckBox4)
+        CheckBoxList.Add(CheckBox5)
+        CheckBoxList.Add(CheckBox6)
+        CheckBoxList.Add(CheckBox7)
+        CheckBoxList.Add(CheckBox8)
+        CheckBoxList.Add(CheckBox9)
         PlayerList = PL
 
     End Sub
@@ -26,7 +31,6 @@
         End If
 
     End Sub
-
     Public Sub SetCheckBoxNames()
         'Set Each Checboxes name
         For i As Integer = 1 To PlayerList.Count - 1
@@ -40,8 +44,13 @@
         For i As Integer = 0 To CheckBoxList.Count - 1
             CheckBoxList(i).Enabled = False
         Next
-        'user can now vote to end round since the voted who to kill
+        'user can now vote to end round since they voted who to kill
         EndRoundCheckBox.Enabled = True
+    End Sub
+    Public Sub Enable_CheckBoxes()
+        For i As Integer = 0 To CheckBoxList.Count - 1
+            CheckBoxList(i).Enabled = False
+        Next
     End Sub
     Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
         'PlayerList(1).AddVote()
@@ -64,6 +73,31 @@
         MainForm.SendVoteToEveryone(PlayerList(4))
         Disable_CheckBoxes()
     End Sub
+    Private Sub CheckBox5_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox5.CheckedChanged
+        'PlayerList(4).AddVote()
+        MainForm.SendVoteToEveryone(PlayerList(5))
+        Disable_CheckBoxes()
+    End Sub
+    Private Sub CheckBox6_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox6.CheckedChanged
+        'PlayerList(6).AddVote()
+        MainForm.SendVoteToEveryone(PlayerList(6))
+        Disable_CheckBoxes()
+    End Sub
+    Private Sub CheckBox7_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox7.CheckedChanged
+        'PlayerList(7).AddVote()
+        MainForm.SendVoteToEveryone(PlayerList(7))
+        Disable_CheckBoxes()
+    End Sub
+    Private Sub CheckBox8_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox8.CheckedChanged
+        'PlayerList(8).AddVote()
+        MainForm.SendVoteToEveryone(PlayerList(8))
+        Disable_CheckBoxes()
+    End Sub
+    Private Sub CheckBox9_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox9.CheckedChanged
+        'PlayerList(9).AddVote()
+        MainForm.SendVoteToEveryone(PlayerList(9))
+        Disable_CheckBoxes()
+    End Sub
     Private Sub EndRoundCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles EndRoundCheckBox.CheckedChanged
         MainForm.SendVotesToEndRound()
         EndRoundCheckBox.Enabled = False
@@ -71,5 +105,6 @@
     Private Sub VoteMenuForm_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.FormClosing
         Me.Hide()
         e.Cancel = True
+        MainForm.EnableVoteMenuButton()
     End Sub
 End Class

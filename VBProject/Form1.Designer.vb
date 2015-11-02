@@ -35,7 +35,6 @@ Partial Class MainForm
         Me.PlayerName3 = New System.Windows.Forms.Label()
         Me.PlayerName1 = New System.Windows.Forms.Label()
         Me.PlayerName4 = New System.Windows.Forms.Label()
-        Me.CardInfoLabel = New System.Windows.Forms.Label()
         Me.Card4 = New System.Windows.Forms.PictureBox()
         Me.Card3 = New System.Windows.Forms.PictureBox()
         Me.Card1 = New System.Windows.Forms.PictureBox()
@@ -49,6 +48,17 @@ Partial Class MainForm
         Me.TurnLabel = New System.Windows.Forms.Label()
         Me.VoteMenuButton = New System.Windows.Forms.Button()
         Me.RestartRoundButton = New System.Windows.Forms.Button()
+        Me.PlayerName5 = New System.Windows.Forms.Label()
+        Me.Card8 = New System.Windows.Forms.PictureBox()
+        Me.PlayerName6 = New System.Windows.Forms.Label()
+        Me.Card9 = New System.Windows.Forms.PictureBox()
+        Me.PlayerName7 = New System.Windows.Forms.Label()
+        Me.Card10 = New System.Windows.Forms.PictureBox()
+        Me.PlayerName9 = New System.Windows.Forms.Label()
+        Me.Card12 = New System.Windows.Forms.PictureBox()
+        Me.PlayerName8 = New System.Windows.Forms.Label()
+        Me.Card11 = New System.Windows.Forms.PictureBox()
+        Me.CardInfoButton = New System.Windows.Forms.Button()
         CType(Me.Card4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Card3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Card1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -57,6 +67,11 @@ Partial Class MainForm
         CType(Me.Card6, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Card5, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Card8, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Card9, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Card10, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Card12, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Card11, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'SendButton
@@ -80,7 +95,7 @@ Partial Class MainForm
         'Settings
         '
         Me.Settings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Settings.Location = New System.Drawing.Point(1803, 861)
+        Me.Settings.Location = New System.Drawing.Point(1799, 876)
         Me.Settings.Name = "Settings"
         Me.Settings.Size = New System.Drawing.Size(75, 23)
         Me.Settings.TabIndex = 12
@@ -136,22 +151,21 @@ Partial Class MainForm
         '
         Me.PlayerName2.AutoSize = True
         Me.PlayerName2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.PlayerName2.Font = New System.Drawing.Font("Papyrus", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PlayerName2.Location = New System.Drawing.Point(385, 38)
+        Me.PlayerName2.Font = New System.Drawing.Font("Papyrus", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PlayerName2.Location = New System.Drawing.Point(226, 38)
         Me.PlayerName2.Name = "PlayerName2"
-        Me.PlayerName2.Size = New System.Drawing.Size(201, 40)
+        Me.PlayerName2.Size = New System.Drawing.Size(163, 32)
         Me.PlayerName2.TabIndex = 17
         Me.PlayerName2.Text = "Not Connected"
         '
         'PlayerName3
         '
-        Me.PlayerName3.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.PlayerName3.AutoSize = True
         Me.PlayerName3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.PlayerName3.Font = New System.Drawing.Font("Papyrus", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PlayerName3.Location = New System.Drawing.Point(1017, 38)
+        Me.PlayerName3.Font = New System.Drawing.Font("Papyrus", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PlayerName3.Location = New System.Drawing.Point(564, 38)
         Me.PlayerName3.Name = "PlayerName3"
-        Me.PlayerName3.Size = New System.Drawing.Size(201, 40)
+        Me.PlayerName3.Size = New System.Drawing.Size(163, 32)
         Me.PlayerName3.TabIndex = 18
         Me.PlayerName3.Text = "Not Connected"
         '
@@ -172,44 +186,37 @@ Partial Class MainForm
         Me.PlayerName4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PlayerName4.AutoSize = True
         Me.PlayerName4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.PlayerName4.Font = New System.Drawing.Font("Papyrus", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PlayerName4.Font = New System.Drawing.Font("Papyrus", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.PlayerName4.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.PlayerName4.Location = New System.Drawing.Point(1622, 38)
+        Me.PlayerName4.Location = New System.Drawing.Point(1221, 38)
         Me.PlayerName4.Name = "PlayerName4"
-        Me.PlayerName4.Size = New System.Drawing.Size(201, 40)
+        Me.PlayerName4.Size = New System.Drawing.Size(163, 32)
         Me.PlayerName4.TabIndex = 20
         Me.PlayerName4.Text = "Not Connected"
-        '
-        'CardInfoLabel
-        '
-        Me.CardInfoLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom
-        Me.CardInfoLabel.AutoSize = True
-        Me.CardInfoLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CardInfoLabel.Location = New System.Drawing.Point(1011, 792)
-        Me.CardInfoLabel.Name = "CardInfoLabel"
-        Me.CardInfoLabel.Size = New System.Drawing.Size(180, 20)
-        Me.CardInfoLabel.TabIndex = 21
-        Me.CardInfoLabel.Text = "Click Card For More Info"
-        Me.CardInfoLabel.Visible = False
+        Me.PlayerName4.Visible = False
         '
         'Card4
         '
         Me.Card4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Card4.BackgroundImage = CType(resources.GetObject("Card4.BackgroundImage"), System.Drawing.Image)
+        Me.Card4.Image = CType(resources.GetObject("Card4.Image"), System.Drawing.Image)
         Me.Card4.InitialImage = CType(resources.GetObject("Card4.InitialImage"), System.Drawing.Image)
-        Me.Card4.Location = New System.Drawing.Point(1466, 38)
+        Me.Card4.Location = New System.Drawing.Point(1085, 38)
         Me.Card4.Name = "Card4"
-        Me.Card4.Size = New System.Drawing.Size(150, 205)
+        Me.Card4.Size = New System.Drawing.Size(130, 180)
         Me.Card4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.Card4.TabIndex = 7
         Me.Card4.TabStop = False
+        Me.Card4.Visible = False
         '
         'Card3
         '
-        Me.Card3.Anchor = System.Windows.Forms.AnchorStyles.Top
+        Me.Card3.BackgroundImage = CType(resources.GetObject("Card3.BackgroundImage"), System.Drawing.Image)
+        Me.Card3.Image = CType(resources.GetObject("Card3.Image"), System.Drawing.Image)
         Me.Card3.InitialImage = CType(resources.GetObject("Card3.InitialImage"), System.Drawing.Image)
-        Me.Card3.Location = New System.Drawing.Point(848, 38)
+        Me.Card3.Location = New System.Drawing.Point(428, 38)
         Me.Card3.Name = "Card3"
-        Me.Card3.Size = New System.Drawing.Size(150, 205)
+        Me.Card3.Size = New System.Drawing.Size(130, 180)
         Me.Card3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.Card3.TabIndex = 6
         Me.Card3.TabStop = False
@@ -217,6 +224,8 @@ Partial Class MainForm
         'Card1
         '
         Me.Card1.Anchor = System.Windows.Forms.AnchorStyles.Bottom
+        Me.Card1.BackgroundImage = CType(resources.GetObject("Card1.BackgroundImage"), System.Drawing.Image)
+        Me.Card1.Image = Global.ONUWPC.My.Resources.Resources.back
         Me.Card1.InitialImage = CType(resources.GetObject("Card1.InitialImage"), System.Drawing.Image)
         Me.Card1.Location = New System.Drawing.Point(845, 737)
         Me.Card1.Name = "Card1"
@@ -227,10 +236,12 @@ Partial Class MainForm
         '
         'Card2
         '
+        Me.Card2.BackgroundImage = CType(resources.GetObject("Card2.BackgroundImage"), System.Drawing.Image)
+        Me.Card2.Image = CType(resources.GetObject("Card2.Image"), System.Drawing.Image)
         Me.Card2.InitialImage = CType(resources.GetObject("Card2.InitialImage"), System.Drawing.Image)
-        Me.Card2.Location = New System.Drawing.Point(228, 38)
+        Me.Card2.Location = New System.Drawing.Point(90, 38)
         Me.Card2.Name = "Card2"
-        Me.Card2.Size = New System.Drawing.Size(150, 205)
+        Me.Card2.Size = New System.Drawing.Size(130, 180)
         Me.Card2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.Card2.TabIndex = 4
         Me.Card2.TabStop = False
@@ -238,10 +249,12 @@ Partial Class MainForm
         'Card7
         '
         Me.Card7.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.Card7.BackgroundImage = CType(resources.GetObject("Card7.BackgroundImage"), System.Drawing.Image)
+        Me.Card7.Image = CType(resources.GetObject("Card7.Image"), System.Drawing.Image)
         Me.Card7.InitialImage = CType(resources.GetObject("Card7.InitialImage"), System.Drawing.Image)
         Me.Card7.Location = New System.Drawing.Point(1062, 317)
         Me.Card7.Name = "Card7"
-        Me.Card7.Size = New System.Drawing.Size(150, 205)
+        Me.Card7.Size = New System.Drawing.Size(130, 180)
         Me.Card7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.Card7.TabIndex = 2
         Me.Card7.TabStop = False
@@ -249,10 +262,12 @@ Partial Class MainForm
         'Card6
         '
         Me.Card6.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.Card6.BackgroundImage = CType(resources.GetObject("Card6.BackgroundImage"), System.Drawing.Image)
+        Me.Card6.Image = CType(resources.GetObject("Card6.Image"), System.Drawing.Image)
         Me.Card6.InitialImage = CType(resources.GetObject("Card6.InitialImage"), System.Drawing.Image)
         Me.Card6.Location = New System.Drawing.Point(845, 317)
         Me.Card6.Name = "Card6"
-        Me.Card6.Size = New System.Drawing.Size(150, 205)
+        Me.Card6.Size = New System.Drawing.Size(130, 180)
         Me.Card6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.Card6.TabIndex = 1
         Me.Card6.TabStop = False
@@ -260,10 +275,12 @@ Partial Class MainForm
         'Card5
         '
         Me.Card5.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.Card5.BackgroundImage = CType(resources.GetObject("Card5.BackgroundImage"), System.Drawing.Image)
+        Me.Card5.Image = CType(resources.GetObject("Card5.Image"), System.Drawing.Image)
         Me.Card5.InitialImage = CType(resources.GetObject("Card5.InitialImage"), System.Drawing.Image)
         Me.Card5.Location = New System.Drawing.Point(638, 317)
         Me.Card5.Name = "Card5"
-        Me.Card5.Size = New System.Drawing.Size(150, 205)
+        Me.Card5.Size = New System.Drawing.Size(130, 180)
         Me.Card5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.Card5.TabIndex = 0
         Me.Card5.TabStop = False
@@ -271,7 +288,7 @@ Partial Class MainForm
         'About
         '
         Me.About.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.About.Location = New System.Drawing.Point(1803, 919)
+        Me.About.Location = New System.Drawing.Point(1799, 934)
         Me.About.Name = "About"
         Me.About.Size = New System.Drawing.Size(75, 23)
         Me.About.TabIndex = 22
@@ -281,7 +298,7 @@ Partial Class MainForm
         'Instructions
         '
         Me.Instructions.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Instructions.Location = New System.Drawing.Point(1803, 890)
+        Me.Instructions.Location = New System.Drawing.Point(1799, 905)
         Me.Instructions.Name = "Instructions"
         Me.Instructions.Size = New System.Drawing.Size(75, 23)
         Me.Instructions.TabIndex = 23
@@ -305,8 +322,9 @@ Partial Class MainForm
         'VoteMenuButton
         '
         Me.VoteMenuButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom
+        Me.VoteMenuButton.Enabled = False
         Me.VoteMenuButton.Font = New System.Drawing.Font("Palatino Linotype", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.VoteMenuButton.Location = New System.Drawing.Point(1015, 826)
+        Me.VoteMenuButton.Location = New System.Drawing.Point(1014, 793)
         Me.VoteMenuButton.Name = "VoteMenuButton"
         Me.VoteMenuButton.Size = New System.Drawing.Size(140, 35)
         Me.VoteMenuButton.TabIndex = 25
@@ -318,12 +336,156 @@ Partial Class MainForm
         Me.RestartRoundButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom
         Me.RestartRoundButton.Enabled = False
         Me.RestartRoundButton.Font = New System.Drawing.Font("Palatino Linotype", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RestartRoundButton.Location = New System.Drawing.Point(1017, 878)
+        Me.RestartRoundButton.Location = New System.Drawing.Point(1016, 845)
         Me.RestartRoundButton.Name = "RestartRoundButton"
         Me.RestartRoundButton.Size = New System.Drawing.Size(140, 35)
         Me.RestartRoundButton.TabIndex = 26
         Me.RestartRoundButton.Text = "Restart Round"
         Me.RestartRoundButton.UseVisualStyleBackColor = True
+        '
+        'PlayerName5
+        '
+        Me.PlayerName5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.PlayerName5.AutoSize = True
+        Me.PlayerName5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.PlayerName5.Font = New System.Drawing.Font("Papyrus", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PlayerName5.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.PlayerName5.Location = New System.Drawing.Point(1551, 38)
+        Me.PlayerName5.Name = "PlayerName5"
+        Me.PlayerName5.Size = New System.Drawing.Size(163, 32)
+        Me.PlayerName5.TabIndex = 28
+        Me.PlayerName5.Text = "Not Connected"
+        Me.PlayerName5.Visible = False
+        '
+        'Card8
+        '
+        Me.Card8.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Card8.BackgroundImage = Global.ONUWPC.My.Resources.Resources.back
+        Me.Card8.Image = Global.ONUWPC.My.Resources.Resources.back
+        Me.Card8.InitialImage = Global.ONUWPC.My.Resources.Resources.back
+        Me.Card8.Location = New System.Drawing.Point(1415, 38)
+        Me.Card8.Name = "Card8"
+        Me.Card8.Size = New System.Drawing.Size(130, 180)
+        Me.Card8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.Card8.TabIndex = 27
+        Me.Card8.TabStop = False
+        Me.Card8.Visible = False
+        '
+        'PlayerName6
+        '
+        Me.PlayerName6.Anchor = System.Windows.Forms.AnchorStyles.Right
+        Me.PlayerName6.AutoSize = True
+        Me.PlayerName6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.PlayerName6.Font = New System.Drawing.Font("Papyrus", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PlayerName6.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.PlayerName6.Location = New System.Drawing.Point(1711, 192)
+        Me.PlayerName6.Name = "PlayerName6"
+        Me.PlayerName6.Size = New System.Drawing.Size(163, 32)
+        Me.PlayerName6.TabIndex = 30
+        Me.PlayerName6.Text = "Not Connected"
+        Me.PlayerName6.Visible = False
+        '
+        'Card9
+        '
+        Me.Card9.Anchor = System.Windows.Forms.AnchorStyles.Right
+        Me.Card9.Image = CType(resources.GetObject("Card9.Image"), System.Drawing.Image)
+        Me.Card9.InitialImage = CType(resources.GetObject("Card9.InitialImage"), System.Drawing.Image)
+        Me.Card9.Location = New System.Drawing.Point(1575, 192)
+        Me.Card9.Name = "Card9"
+        Me.Card9.Size = New System.Drawing.Size(130, 180)
+        Me.Card9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.Card9.TabIndex = 29
+        Me.Card9.TabStop = False
+        Me.Card9.Visible = False
+        '
+        'PlayerName7
+        '
+        Me.PlayerName7.Anchor = System.Windows.Forms.AnchorStyles.Right
+        Me.PlayerName7.AutoSize = True
+        Me.PlayerName7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.PlayerName7.Font = New System.Drawing.Font("Papyrus", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PlayerName7.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.PlayerName7.Location = New System.Drawing.Point(1711, 414)
+        Me.PlayerName7.Name = "PlayerName7"
+        Me.PlayerName7.Size = New System.Drawing.Size(163, 32)
+        Me.PlayerName7.TabIndex = 32
+        Me.PlayerName7.Text = "Not Connected"
+        Me.PlayerName7.Visible = False
+        '
+        'Card10
+        '
+        Me.Card10.Anchor = System.Windows.Forms.AnchorStyles.Right
+        Me.Card10.Image = CType(resources.GetObject("Card10.Image"), System.Drawing.Image)
+        Me.Card10.InitialImage = CType(resources.GetObject("Card10.InitialImage"), System.Drawing.Image)
+        Me.Card10.Location = New System.Drawing.Point(1575, 414)
+        Me.Card10.Name = "Card10"
+        Me.Card10.Size = New System.Drawing.Size(130, 180)
+        Me.Card10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.Card10.TabIndex = 31
+        Me.Card10.TabStop = False
+        Me.Card10.Visible = False
+        '
+        'PlayerName9
+        '
+        Me.PlayerName9.AutoSize = True
+        Me.PlayerName9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.PlayerName9.Font = New System.Drawing.Font("Papyrus", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PlayerName9.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.PlayerName9.Location = New System.Drawing.Point(226, 357)
+        Me.PlayerName9.Name = "PlayerName9"
+        Me.PlayerName9.Size = New System.Drawing.Size(163, 32)
+        Me.PlayerName9.TabIndex = 34
+        Me.PlayerName9.Text = "Not Connected"
+        Me.PlayerName9.Visible = False
+        '
+        'Card12
+        '
+        Me.Card12.Image = CType(resources.GetObject("Card12.Image"), System.Drawing.Image)
+        Me.Card12.InitialImage = CType(resources.GetObject("Card12.InitialImage"), System.Drawing.Image)
+        Me.Card12.Location = New System.Drawing.Point(90, 357)
+        Me.Card12.Name = "Card12"
+        Me.Card12.Size = New System.Drawing.Size(130, 180)
+        Me.Card12.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.Card12.TabIndex = 33
+        Me.Card12.TabStop = False
+        Me.Card12.Visible = False
+        '
+        'PlayerName8
+        '
+        Me.PlayerName8.Anchor = System.Windows.Forms.AnchorStyles.Right
+        Me.PlayerName8.AutoSize = True
+        Me.PlayerName8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.PlayerName8.Font = New System.Drawing.Font("Papyrus", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PlayerName8.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.PlayerName8.Location = New System.Drawing.Point(1711, 648)
+        Me.PlayerName8.Name = "PlayerName8"
+        Me.PlayerName8.Size = New System.Drawing.Size(163, 32)
+        Me.PlayerName8.TabIndex = 36
+        Me.PlayerName8.Text = "Not Connected"
+        Me.PlayerName8.Visible = False
+        '
+        'Card11
+        '
+        Me.Card11.Anchor = System.Windows.Forms.AnchorStyles.Right
+        Me.Card11.Image = CType(resources.GetObject("Card11.Image"), System.Drawing.Image)
+        Me.Card11.InitialImage = CType(resources.GetObject("Card11.InitialImage"), System.Drawing.Image)
+        Me.Card11.Location = New System.Drawing.Point(1575, 648)
+        Me.Card11.Name = "Card11"
+        Me.Card11.Size = New System.Drawing.Size(130, 180)
+        Me.Card11.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.Card11.TabIndex = 35
+        Me.Card11.TabStop = False
+        Me.Card11.Visible = False
+        '
+        'CardInfoButton
+        '
+        Me.CardInfoButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CardInfoButton.Location = New System.Drawing.Point(1799, 847)
+        Me.CardInfoButton.Name = "CardInfoButton"
+        Me.CardInfoButton.Size = New System.Drawing.Size(75, 23)
+        Me.CardInfoButton.TabIndex = 37
+        Me.CardInfoButton.Text = "Card Info"
+        Me.CardInfoButton.UseVisualStyleBackColor = True
         '
         'MainForm
         '
@@ -331,12 +493,22 @@ Partial Class MainForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.ClientSize = New System.Drawing.Size(1910, 969)
+        Me.Controls.Add(Me.CardInfoButton)
+        Me.Controls.Add(Me.PlayerName8)
+        Me.Controls.Add(Me.Card11)
+        Me.Controls.Add(Me.PlayerName9)
+        Me.Controls.Add(Me.Card12)
+        Me.Controls.Add(Me.PlayerName7)
+        Me.Controls.Add(Me.Card10)
+        Me.Controls.Add(Me.PlayerName6)
+        Me.Controls.Add(Me.Card9)
+        Me.Controls.Add(Me.PlayerName5)
+        Me.Controls.Add(Me.Card8)
         Me.Controls.Add(Me.RestartRoundButton)
         Me.Controls.Add(Me.VoteMenuButton)
         Me.Controls.Add(Me.TurnLabel)
         Me.Controls.Add(Me.Instructions)
         Me.Controls.Add(Me.About)
-        Me.Controls.Add(Me.CardInfoLabel)
         Me.Controls.Add(Me.PlayerName4)
         Me.Controls.Add(Me.PlayerName1)
         Me.Controls.Add(Me.PlayerName3)
@@ -357,7 +529,7 @@ Partial Class MainForm
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(300, 300)
         Me.Name = "MainForm"
-        Me.Text = "One Night Ultimate WereWolf PC Edition 1.2.2 Beta"
+        Me.Text = "One Night Ultimate WereWolf PC Edition 1.2.5 Beta"
         CType(Me.Card4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Card3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Card1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -366,6 +538,11 @@ Partial Class MainForm
         CType(Me.Card6, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Card5, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Card8, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Card9, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Card10, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Card12, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Card11, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -389,11 +566,21 @@ Partial Class MainForm
     Friend WithEvents PlayerName3 As System.Windows.Forms.Label
     Friend WithEvents PlayerName1 As System.Windows.Forms.Label
     Friend WithEvents PlayerName4 As System.Windows.Forms.Label
-    Friend WithEvents CardInfoLabel As System.Windows.Forms.Label
     Friend WithEvents About As System.Windows.Forms.Button
     Friend WithEvents Instructions As System.Windows.Forms.Button
     Friend WithEvents TurnLabel As System.Windows.Forms.Label
     Friend WithEvents VoteMenuButton As System.Windows.Forms.Button
     Friend WithEvents RestartRoundButton As System.Windows.Forms.Button
+    Friend WithEvents PlayerName5 As System.Windows.Forms.Label
+    Friend WithEvents Card8 As System.Windows.Forms.PictureBox
+    Friend WithEvents PlayerName6 As System.Windows.Forms.Label
+    Friend WithEvents Card9 As System.Windows.Forms.PictureBox
+    Friend WithEvents PlayerName7 As System.Windows.Forms.Label
+    Friend WithEvents Card10 As System.Windows.Forms.PictureBox
+    Friend WithEvents PlayerName9 As System.Windows.Forms.Label
+    Friend WithEvents Card12 As System.Windows.Forms.PictureBox
+    Friend WithEvents PlayerName8 As System.Windows.Forms.Label
+    Friend WithEvents Card11 As System.Windows.Forms.PictureBox
+    Friend WithEvents CardInfoButton As System.Windows.Forms.Button
 
 End Class

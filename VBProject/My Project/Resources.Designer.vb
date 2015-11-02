@@ -92,9 +92,39 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property hunter() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("hunter", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property icon() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("icon", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property insomniac() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("insomniac", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Minion() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Minion", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -135,6 +165,16 @@ Namespace My.Resources
         Friend ReadOnly Property t() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("t", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property tanner() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("tanner", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

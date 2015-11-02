@@ -33,6 +33,7 @@ Public Class MainForm
     Private RoundTime As String = "2"
     Dim voteCount As Integer = 0
     Dim EndRoundVotePassed = False
+    Dim TurnTime As Integer = 10
     Private Delegate Sub UpdateTextBoxDelegate(ByVal txtBox As RichTextBox, ByVal value As String)
     Private Delegate Sub UpdateReadyMessage(ByVal txtBox As CheckBox, ByVal value As String)
     Private Delegate Sub EnableTimerDelegate(ByVal enable As Boolean)
@@ -42,6 +43,8 @@ Public Class MainForm
     Private Delegate Sub RevealAllCardsDelegate()
     Private Delegate Sub VoteToEndRoundDelegate()
     Private Delegate Sub RestartRoundDelegate()
+    Private Delegate Sub SetRestartButtonDelegate(ByVal Enabled As Boolean)
+    Private Delegate Sub EnableNewCardForPlayerDelegate(ByVal index As Integer)
 
     Dim randomIntegerID As Integer = 0
     Dim Time As Integer = 0
@@ -54,7 +57,7 @@ Public Class MainForm
     Dim TMFirstPickIndex = -1
     Dim RobbersNewRole As String = "Robber"
     'Forms
-    Dim VMF As VoteMenuForm = New VoteMenuForm(PlayerList)
+    Dim VMF As VoteMenuForm
     'Network Related Variables
     Private Const port As Integer = 9653 'Or whatever port number you want to use
     Private Const broadcastAddress As String = "255.255.255.255"
@@ -107,16 +110,32 @@ Public Class MainForm
         Card5.Image = My.Resources.back
         Card6.Image = My.Resources.back
         Card7.Image = My.Resources.back
+        Card8.Image = My.Resources.back
+        Card9.Image = My.Resources.back
+        Card10.Image = My.Resources.back
+        Card11.Image = My.Resources.back
+        Card12.Image = My.Resources.back
         'assign list of player name labels
         ListOfPlayerNameLabels.Add(PlayerName1)
         ListOfPlayerNameLabels.Add(PlayerName2)
         ListOfPlayerNameLabels.Add(PlayerName3)
         ListOfPlayerNameLabels.Add(PlayerName4)
+        ListOfPlayerNameLabels.Add(PlayerName5)
+        ListOfPlayerNameLabels.Add(PlayerName6)
+        ListOfPlayerNameLabels.Add(PlayerName7)
+        ListOfPlayerNameLabels.Add(PlayerName8)
+        ListOfPlayerNameLabels.Add(PlayerName9)
+
         'Assign the picture boxes
         ListOfPlayerCards.Add(Card1)
         ListOfPlayerCards.Add(Card2)
         ListOfPlayerCards.Add(Card3)
         ListOfPlayerCards.Add(Card4)
+        ListOfPlayerCards.Add(Card8)
+        ListOfPlayerCards.Add(Card9)
+        ListOfPlayerCards.Add(Card10)
+        ListOfPlayerCards.Add(Card11)
+        ListOfPlayerCards.Add(Card12)
         'Middle Cards
         MiddleCardPicutreList.Add(Card5)
         MiddleCardPicutreList.Add(Card6)
@@ -125,7 +144,7 @@ Public Class MainForm
         CharacterList.Add("WereWolf")
         CharacterList.Add("WereWolf")
         CharacterList.Add("Seer")
-        CharacterList.Add("Villager")
+        'CharacterList.Add("Villager")
         CharacterList.Add("Robber")
         CharacterList.Add("TroubleMaker")
         TurnLabel.Text = ""
@@ -134,6 +153,9 @@ Public Class MainForm
         'Prevent Form from being to sized to small,
         Me.MinimumSize = New System.Drawing.Size(1600, 900)
         Me.Size = New System.Drawing.Size(200, 23)
+        'Disable Looking at their own card
+        Card1.Enabled = False
+        VMF = New VoteMenuForm(PlayerList)
     End Sub
 
     Private Sub InitializeSender()
@@ -264,6 +286,10 @@ Public Class MainForm
                     'UpdateTextBox(ChatBox, "Player ip is " + endPoint.ToString())
 
                     PlayerList.Add(NewPlayer)
+                    'Enable a new card for said Player
+                    For i As Integer = 0 To PlayerList.Count - 1
+                        Me.Invoke(New EnableNewCardForPlayerDelegate(AddressOf EnableNewCardForPlayer), i)                     
+                    Next
                 End If
 
                 'Determine Master Or Not and Resend Data back,
@@ -348,14 +374,24 @@ Public Class MainForm
                 UpdateTextBox(ChatBox, "Master Restarted Round.")
             End If
 
-            'if/when we have enough player we can enable the ready option
-            If PlayerList.Count >= 3 Then
-                UpdateReadyText(ReadyToStart, "Ready To Start?")
+            If StringArray(5).Contains("UpdateCharacterList") Then
+                CharacterList.Add(StringArray(6))
+                UpdateTextBox(ChatBox, "Master Added " + StringArray(6) + " Role.")
             End If
 
-            'Since we have a master tell everyone who is master, but do it once on InitialSend
+            'if/when we have enough player we can enable the ready option
+            If PlayerList.Count >= 3 And CharacterList.Count = PlayerList.Count + 3 Then
+                UpdateReadyText(ReadyToStart, "Ready To Start?")
+            ElseIf CharacterList.Count < PlayerList.Count + 3 Then
+                UpdateReadyText(ReadyToStart, "Not Enough Roles Added")
+            ElseIf PlayerList.Count < 3 Then
+                UpdateReadyText(ReadyToStart, "Not Enough Players To Start")
+            End If
+
+            'Since we have a master tell clients who is  master, but do it once on InitialSend
             If isMaster And StringArray(5).Contains("InitialSend") Then
                 UpdateTextBox(ChatBox, "You are Master.")
+                Me.Invoke(New SetRestartButtonDelegate(AddressOf SetRestartRoundButton), True)
                 RestartRoundButton.Enabled = True
                 Dim data2() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName & " is Master.")
                 sendingClientChat.Send(data2, data2.Length)
@@ -364,8 +400,13 @@ Public Class MainForm
             End If
 
         Loop
-
-
+    End Sub
+    Public Sub EnableNewCardForPlayer(ByVal i As Integer)
+        ListOfPlayerCards(i).Visible = True
+        ListOfPlayerNameLabels(i).Visible = True
+    End Sub
+    Public Sub SetRestartRoundButton(ByVal Enabled As Boolean)
+        RestartRoundButton.Enabled = Enabled
     End Sub
     Public Sub NameChanged()
         Dim PlayerNum As String = thisPlayer.GetPlayerNumber.ToString()
@@ -445,6 +486,10 @@ Public Class MainForm
                 ReadyCheckBox.Enabled = False
                 ReadyCheckBox.Checked = False
                 ReadyCheckBox.Text = value
+            ElseIf value.Equals("Not Enough Roles Added") Then
+                ReadyCheckBox.Enabled = False
+                ReadyCheckBox.Checked = False
+                ReadyCheckBox.Text = value
             End If
 
         End If
@@ -497,15 +542,16 @@ Public Class MainForm
     Private Sub TroubleMakerCardSwitchLogic(ByVal cardNum As Integer)
 
         If thisPlayer.GetCardType.Equals("TroubleMaker") And TurnAllowed Then
-            TMFirstPickIndex = cardNum
             If TMFirstPickIndex > 0 Then
+                TurnAllowed = False
                 'Means we have picked two people to swap, same swap logic for robber, same process too
                 Dim TempRole = PlayerList(cardNum).GetCardType
                 PlayerList(cardNum).SetPlayerCardType(PlayerList(TMFirstPickIndex).GetCardType)
                 PlayerList(TMFirstPickIndex).SetPlayerCardType(TempRole)
-                Dim data() As Byte = Encoding.ASCII.GetBytes(PlayerList(cardNum).GetCardType + PlayerList(cardNum).GetUniquePlayerID + "<>" + PlayerList(TMFirstPickIndex).GetCardType + "<>" + PlayerList(TMFirstPickIndex).GetUniquePlayerID)
+                Dim data() As Byte = Encoding.ASCII.GetBytes(PlayerList(cardNum).GetCardType + "<>" + PlayerList(cardNum).GetUniquePlayerID + "<>" + PlayerList(TMFirstPickIndex).GetCardType + "<>" + PlayerList(TMFirstPickIndex).GetUniquePlayerID)
                 sendingUpdateCardChanges.Send(data, data.Length)
             End If
+            TMFirstPickIndex = cardNum
         End If
     End Sub
     Private Sub Card5_Click(sender As Object, e As EventArgs) Handles Card5.Click
@@ -523,51 +569,39 @@ Public Class MainForm
         SeerCardCheckTwoLogic(2)
 
     End Sub
+    Private Sub Card12_Click(sender As Object, e As EventArgs) Handles Card12.Click
+        PlayerCardClickLogic(8)
+    End Sub
+    Private Sub Card11_Click(sender As Object, e As EventArgs) Handles Card11.Click
+        PlayerCardClickLogic(7)
+    End Sub
+    Private Sub Card10_Click(sender As Object, e As EventArgs) Handles Card10.Click
+        PlayerCardClickLogic(6)
+    End Sub
+    Private Sub Card9_Click(sender As Object, e As EventArgs) Handles Card9.Click
+        PlayerCardClickLogic(5)
+    End Sub
+    Private Sub Card8_Click(sender As Object, e As EventArgs) Handles Card8.Click
+        PlayerCardClickLogic(4)
+    End Sub
     Private Sub Card4_Click(sender As Object, e As EventArgs) Handles Card4.Click
-        'prevent index error for not having a player, need a min of 3 players
-        If PlayerList.Count >= 4 Then
-            SeerCardCheckLogic(3)
-            RobberCardSwitchLogic(3)
-            TroubleMakerCardSwitchLogic(3)
-        End If
-
+        PlayerCardClickLogic(3)
     End Sub
     Private Sub Card3_Click(sender As Object, e As EventArgs) Handles Card3.Click
-        SeerCardCheckLogic(2)
-        RobberCardSwitchLogic(2)
-        TroubleMakerCardSwitchLogic(2)
+        PlayerCardClickLogic(2)
     End Sub
     Private Sub Card2_Click(sender As Object, e As EventArgs) Handles Card2.Click
-        SeerCardCheckLogic(1)
-        RobberCardSwitchLogic(1)
-        TroubleMakerCardSwitchLogic(1)
+        PlayerCardClickLogic(1)
+    End Sub
+    Private Sub PlayerCardClickLogic(ByVal CardNum As Integer)
+        SeerCardCheckLogic(CardNum)
+        RobberCardSwitchLogic(CardNum)
+        TroubleMakerCardSwitchLogic(CardNum)
     End Sub
     Private Sub Card1_Click(sender As Object, e As EventArgs) Handles Card1.Click
-
         If thisPlayer.GetPlayerNumber() = 0 Then
-            Select Case thisPlayer.GetCardType
-                Case "WereWolf"
-                    MsgBox("You are the " + thisPlayer.GetCardType + vbNewLine +
-                           "The Werewolf has 5 seconds to see one of the middle card so long as there are no other Werewolf or do nothing. Window of Action is 10 - 15 Seconds", , "About Your Card")
-                Case "Seer"
-                    MsgBox("You are the " + thisPlayer.GetCardType + vbNewLine +
-                         "The Seer has 5 seconds to see two of the middle cards, one other player's card or do nothing. Window of Action is 15 - 20 Seconds", , "About Your Card")
-                Case "Villager"
-                    MsgBox("You are the " + thisPlayer.GetCardType + vbNewLine +
-                        "The Villager has no special powers, use your wits.", , "About Your Card")
-                Case "Robber"
-                    MsgBox("You are the " + thisPlayer.GetCardType + vbNewLine +
-                        "The Robber has 5 seconds to switch cards with another player, viewing that other players card as a result or do nothing. Window of Action is 20 - 25 Seconds", , "About Your Card")
-                Case "TroubleMaker"
-                    MsgBox("You are the " + thisPlayer.GetCardType + vbNewLine +
-                        "The Troublemaker has 5 seconds swap the cards between two other players or do nothing. Window of Action is 25 - 30 Seconds", , "About Your Card")
-
-            End Select
-
-            'characters.PrintCharacters()
 
         End If
-
     End Sub
     Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs)
 
@@ -585,10 +619,14 @@ Public Class MainForm
     Public Sub EnableSettingsButton()
         Settings.Enabled = True
     End Sub
-
     Public ReadOnly Property GetAudioEnabledBool() As Boolean
         Get
             Return EnableAudio
+        End Get
+    End Property
+    Public ReadOnly Property GetPlayerList() As List(Of Player)
+        Get
+            Return PlayerList
         End Get
     End Property
     Private Sub TimerLabel_Click(sender As Object, e As EventArgs) Handles TimerLabel.Click
@@ -644,6 +682,8 @@ Public Class MainForm
     Private Sub StartRoundSetup(ByVal SecondsPassed As String)
         If SecondsPassed.Equals("5") And StartRound Then
             StartRound = False
+            RoundStarted = True
+            VoteMenuButton.Enabled = True
             Card1.Image = My.Resources.back
             If EnableAudio Then
                 My.Computer.Audio.Play(My.Resources.background_horror, AudioPlayMode.BackgroundLoop)
@@ -686,12 +726,14 @@ Public Class MainForm
 
         'Hide all Cards at specified time
         If Convert.ToInt32(StringTime(1)) >= 15 And thisPlayer.GetCardType.Equals("WereWolf") Then
-            TurnAllowed = False
-            HideAllCards()
+            EndOfTurnLogic()
         End If
 
     End Sub
-
+    Private Sub EndOfTurnLogic()
+        TurnAllowed = False
+        HideAllCards()
+    End Sub
     Private Sub SeerTurnLogic()
 
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
@@ -705,8 +747,7 @@ Public Class MainForm
         End If
         'Hide Cards again
         If Convert.ToInt32(StringTime(1)) >= 20 And thisPlayer.GetCardType.Equals("Seer") Then
-            TurnAllowed = False
-            HideAllCards()
+            EndOfTurnLogic()
         End If
     End Sub
 
@@ -723,8 +764,7 @@ Public Class MainForm
         End If
         'Hide Cards again, since robber changes role we have to check for the role he becomes
         If Convert.ToInt32(StringTime(1)) >= 25 And thisPlayer.GetCardType.Equals(RobbersNewRole) Then
-            TurnAllowed = False
-            HideAllCards()
+            EndOfTurnLogic()
         End If
     End Sub
     Private Sub TroubleMakerTurnLogic()
@@ -739,7 +779,7 @@ Public Class MainForm
         End If
 
         If Convert.ToInt32(StringTime(1)) >= 30 And thisPlayer.GetCardType.Equals("TroubleMaker") Then
-            TurnAllowed = False
+            EndOfTurnLogic()
         End If
 
         'technically this goes to whomever is the last person to play
@@ -786,7 +826,6 @@ Public Class MainForm
                 GameTime.Enabled = False
             End If
         End If
-        CardInfoLabel.Visible = False
     End Sub
     Public Sub SetRoundTime(ByVal time As String)
         RoundTime = time
@@ -896,7 +935,6 @@ Public Class MainForm
             Me.Invoke(New GameSetUpDelegate(AddressOf GameSetUp), thisPlayer.GetCardType)
         Loop
     End Sub
-
     Public Sub GameSetUp(ByVal type As String)
 
         Select Case type
@@ -918,8 +956,6 @@ Public Class MainForm
 
         'if We have a player for the card set player name for card
         Me.Invoke(New SetPlayerNameLabelsDelegate(AddressOf SetPlayerNameLabels))
-        CardInfoLabel.Visible = True
-
     End Sub
     Private Sub SetPlayerNameLabels()
         For i As Integer = 1 To PlayerList.Count - 1
@@ -928,7 +964,6 @@ Public Class MainForm
             End If
         Next
     End Sub
-
     Private Sub RecieverUpdateCardChanges()
         Dim endPoint As IPEndPoint = New IPEndPoint(IPAddress.Any, portUpdateCardChanges)
         Do While True 'Infinite Loop to keep listening for incomming data
@@ -1015,10 +1050,15 @@ Public Class MainForm
                vbNewLine + "So long as one Werewolf gets shot the Humans win regardless if a human had to die in the process. However, if no Werewolf dies the Humans lose.", MsgBoxStyle.Information, "Insturctions On How To Play")
 
     End Sub
-
     Private Sub VoteMenuButton_Click(sender As Object, e As EventArgs) Handles VoteMenuButton.Click
-        VMF.SetPlayerList(PlayerList)
-        VMF.Show()
+        If RoundStarted = True Then
+            VMF = New VoteMenuForm(PlayerList)
+            VMF.Show()
+            VoteMenuButton.Enabled = False
+        End If
+    End Sub
+    Public Sub EnableVoteMenuButton()
+        VoteMenuButton.Enabled = True
     End Sub
 
     Public Sub SendVoteToEveryone(ByVal playreVotedFor As Player)
@@ -1045,6 +1085,7 @@ Public Class MainForm
         isReadyList.Clear()
         GameTime.Enabled = False
         RoundStarted = False
+        VoteMenuButton.Enabled = False
         Me.BackgroundImage = My.Resources.wooddark
         StartRound = True
         voteCount = 0
@@ -1059,12 +1100,12 @@ Public Class MainForm
         TurnAllowed = False
         TMFirstPickIndex = -1
         RobbersNewRole = "Robber"
-
-        'Add Characters to list back since they were removed when they were assigned
+        CharacterList.Clear()
+        'Add default essential Characters to list back since they were removed when they were assigned
         CharacterList.Add("WereWolf")
         CharacterList.Add("WereWolf")
         CharacterList.Add("Seer")
-        CharacterList.Add("Villager")
+        'CharacterList.Add("Villager")
         CharacterList.Add("Robber")
         CharacterList.Add("TroubleMaker")
         'Enable the ready again
@@ -1082,5 +1123,14 @@ Public Class MainForm
             Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName() + "<>" + thisPlayer.GetCardType + "<>" + "-" + "<>" + randomIntegerID.ToString + "<>" + isMaster.ToString + "<>" + "RestartRound")
             sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
         End If
+    End Sub
+    Public Sub UpdateCharacterList(ByVal RoleToAdd As String)
+        Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName() + "<>" + thisPlayer.GetCardType + "<>" + "-" + "<>" + randomIntegerID.ToString + "<>" + isMaster.ToString + "<>" + "UpdateCharacterList" + "<>" + RoleToAdd)
+        sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
+    End Sub
+
+    Private Sub CardInfoButton_Click(sender As Object, e As EventArgs) Handles CardInfoButton.Click
+        Dim CIF As CardInfoForm = New CardInfoForm
+        CIF.Show()
     End Sub
 End Class

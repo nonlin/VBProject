@@ -92,6 +92,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="CardInfoForm.Designer.vb">
+      <DependentUpon>CardInfoForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CardInfoForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Characters.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
@@ -132,6 +138,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CardInfoForm.resx">
+      <DependentUpon>CardInfoForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
     </EmbeddedResource>
@@ -228,6 +237,18 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tanner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Minion.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hunter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\insomniac.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

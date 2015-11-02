@@ -10,3 +10,4 @@ C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\De
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\ONUW PC.pdb
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\bin\Debug\ONUW PC.xml
 C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUW PC.xml
+C:\Users\George\documents\visual studio 2012\Projects\VBProject\VBProject\obj\Debug\ONUWPC.CardInfoForm.resources

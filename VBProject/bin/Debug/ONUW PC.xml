@@ -27,7 +27,19 @@ ONUWPC
 	<summary>
   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
 </summary>
+</member><member name="P:ONUWPC.My.Resources.Resources.hunter">
+	<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
 </member><member name="P:ONUWPC.My.Resources.Resources.icon">
+	<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member><member name="P:ONUWPC.My.Resources.Resources.insomniac">
+	<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member><member name="P:ONUWPC.My.Resources.Resources.Minion">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
@@ -44,6 +56,10 @@ ONUWPC
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member><member name="P:ONUWPC.My.Resources.Resources.t">
+	<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member><member name="P:ONUWPC.My.Resources.Resources.tanner">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>

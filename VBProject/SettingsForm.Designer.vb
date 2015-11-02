@@ -32,11 +32,15 @@ Partial Class SettingsForm
         Me.HostSettingsLabel = New System.Windows.Forms.Label()
         Me.RoundTimeTextField = New System.Windows.Forms.TextBox()
         Me.RoundLabel = New System.Windows.Forms.Label()
+        Me.RoleComboBox = New System.Windows.Forms.ComboBox()
+        Me.AddRolesLabel = New System.Windows.Forms.Label()
+        Me.AddRoleButton = New System.Windows.Forms.Button()
         CType(Me.FontSizeValue, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'PlayerNameField
         '
+        Me.PlayerNameField.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PlayerNameField.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.PlayerNameField.Location = New System.Drawing.Point(172, 26)
         Me.PlayerNameField.Name = "PlayerNameField"
@@ -55,7 +59,8 @@ Partial Class SettingsForm
         '
         'SaveButton
         '
-        Me.SaveButton.Location = New System.Drawing.Point(105, 253)
+        Me.SaveButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom
+        Me.SaveButton.Location = New System.Drawing.Point(155, 332)
         Me.SaveButton.Name = "SaveButton"
         Me.SaveButton.Size = New System.Drawing.Size(75, 23)
         Me.SaveButton.TabIndex = 2
@@ -74,6 +79,7 @@ Partial Class SettingsForm
         '
         'FontSizeValue
         '
+        Me.FontSizeValue.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FontSizeValue.Location = New System.Drawing.Point(172, 69)
         Me.FontSizeValue.Maximum = 14
         Me.FontSizeValue.Minimum = 8
@@ -84,6 +90,7 @@ Partial Class SettingsForm
         '
         'AudioCheckBox
         '
+        Me.AudioCheckBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.AudioCheckBox.AutoSize = True
         Me.AudioCheckBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.AudioCheckBox.Location = New System.Drawing.Point(172, 129)
@@ -95,7 +102,8 @@ Partial Class SettingsForm
         '
         'Cancel
         '
-        Me.Cancel.Location = New System.Drawing.Point(207, 253)
+        Me.Cancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom
+        Me.Cancel.Location = New System.Drawing.Point(256, 332)
         Me.Cancel.MaximumSize = New System.Drawing.Size(75, 23)
         Me.Cancel.MinimumSize = New System.Drawing.Size(75, 23)
         Me.Cancel.Name = "Cancel"
@@ -115,6 +123,7 @@ Partial Class SettingsForm
         '
         'RoundTimeTextField
         '
+        Me.RoundTimeTextField.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.RoundTimeTextField.Enabled = False
         Me.RoundTimeTextField.Location = New System.Drawing.Point(172, 179)
         Me.RoundTimeTextField.Name = "RoundTimeTextField"
@@ -131,11 +140,47 @@ Partial Class SettingsForm
         Me.RoundLabel.TabIndex = 10
         Me.RoundLabel.Text = "Round Time:"
         '
+        'RoleComboBox
+        '
+        Me.RoleComboBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.RoleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.RoleComboBox.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.RoleComboBox.FormattingEnabled = True
+        Me.RoleComboBox.Items.AddRange(New Object() {"Drunk", "Hunter", "Insomniac", "Minion", "Tanner", "Villager"})
+        Me.RoleComboBox.Location = New System.Drawing.Point(172, 223)
+        Me.RoleComboBox.Name = "RoleComboBox"
+        Me.RoleComboBox.Size = New System.Drawing.Size(110, 21)
+        Me.RoleComboBox.Sorted = True
+        Me.RoleComboBox.TabIndex = 11
+        '
+        'AddRolesLabel
+        '
+        Me.AddRolesLabel.AutoSize = True
+        Me.AddRolesLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.AddRolesLabel.Location = New System.Drawing.Point(16, 224)
+        Me.AddRolesLabel.Name = "AddRolesLabel"
+        Me.AddRolesLabel.Size = New System.Drawing.Size(97, 20)
+        Me.AddRolesLabel.TabIndex = 12
+        Me.AddRolesLabel.Text = "Add Roles:"
+        '
+        'AddRoleButton
+        '
+        Me.AddRoleButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.AddRoleButton.Location = New System.Drawing.Point(304, 223)
+        Me.AddRoleButton.Name = "AddRoleButton"
+        Me.AddRoleButton.Size = New System.Drawing.Size(41, 23)
+        Me.AddRoleButton.TabIndex = 13
+        Me.AddRoleButton.Text = "Add"
+        Me.AddRoleButton.UseVisualStyleBackColor = True
+        '
         'SettingsForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(347, 288)
+        Me.ClientSize = New System.Drawing.Size(367, 367)
+        Me.Controls.Add(Me.AddRoleButton)
+        Me.Controls.Add(Me.AddRolesLabel)
+        Me.Controls.Add(Me.RoleComboBox)
         Me.Controls.Add(Me.RoundLabel)
         Me.Controls.Add(Me.RoundTimeTextField)
         Me.Controls.Add(Me.HostSettingsLabel)
@@ -163,4 +208,7 @@ Partial Class SettingsForm
     Friend WithEvents HostSettingsLabel As System.Windows.Forms.Label
     Friend WithEvents RoundTimeTextField As System.Windows.Forms.TextBox
     Friend WithEvents RoundLabel As System.Windows.Forms.Label
+    Friend WithEvents RoleComboBox As System.Windows.Forms.ComboBox
+    Friend WithEvents AddRolesLabel As System.Windows.Forms.Label
+    Friend WithEvents AddRoleButton As System.Windows.Forms.Button
 End Class

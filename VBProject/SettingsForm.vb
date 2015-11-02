@@ -1,6 +1,8 @@
 ﻿Public Class SettingsForm
     Private player = New Player()
     Private RoundTime As Integer
+    Private RoleList As New List(Of String)
+    Private RoleCount As Integer = 4
     Public Sub New(ByVal p As Player)
         InitializeComponent()
         player = p
@@ -15,8 +17,12 @@
     Private Sub SettingsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If MainForm.GetIsMaster Then
             RoundTimeTextField.Enabled = True
+            RoleComboBox.Enabled = True
+            AddRoleButton.Enabled = True
         Else
             RoundTimeTextField.Enabled = False
+            RoleComboBox.Enabled = False
+            AddRoleButton.Enabled = False
         End If
         RoundTimeTextField.Text = MainForm.GetRoundTime
     End Sub
@@ -60,6 +66,26 @@
         Me.Close()
     End Sub
     Private Sub RoundTimeTextField_TextChanged(sender As Object, e As EventArgs) Handles RoundTimeTextField.TextChanged
+
+    End Sub
+
+    Private Sub AddRoleButton_Click(sender As Object, e As EventArgs) Handles AddRoleButton.Click
+        'if RoleCount is less than Roles are 3 + the amount ofplayers playing then we can add a roll
+        If RoleCount < (MainForm.GetPlayerList.Count + 3) - 1 Then
+            If Not RoleComboBox.SelectedItem.ToString.Equals("") Then
+                MainForm.UpdateCharacterList(RoleComboBox.SelectedItem.ToString)
+                RoleCount = RoleCount + 1
+            Else
+                MsgBox("Please pick a role from the list to add.", MsgBoxStyle.Critical, "Error - Role Not Selected")
+            End If
+        Else
+            MsgBox("Can't add any more, not enough player to add roles.", MsgBoxStyle.Critical, "Error - Not Enough Players")
+        End If
+
+
+    End Sub
+
+    Private Sub RoleComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles RoleComboBox.SelectedIndexChanged
 
     End Sub
 End Class
