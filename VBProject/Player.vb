@@ -6,6 +6,8 @@
     Private FontSize As Integer = 10
     Private UniquePlayerID As String = ""
     Private VoteCount As Integer = 0
+    'If hunter voted for player set HunterSights to True to indicate Hunter is aiming for this person
+    Private HunterSights As Boolean = False
 
     Public Sub New(ByVal num As Integer, ByVal type As String, ByVal name As String)
 
@@ -73,7 +75,7 @@
     End Sub
 
     Public Sub SetVoteCount(ByVal vote As Integer)
-        VoteCount = vote
+        VoteCount = VoteCount + vote
     End Sub
 
     Public ReadOnly Property GetVoteCount()
@@ -81,5 +83,12 @@
             Return VoteCount
         End Get
     End Property
-
+    Public Sub SetHunterSights(ByVal bool As Boolean)
+        HunterSights = bool
+    End Sub
+    Public ReadOnly Property GetHunterSights()
+        Get
+            Return HunterSights
+        End Get
+    End Property
 End Class

@@ -68,6 +68,7 @@ Public Class MainForm
     Dim TurnAllowed As Boolean = False
     Dim TMFirstPickIndex = -1
     Dim RobbersNewRole As String = "Robber"
+    Dim DrunksNewRole As String = "Drunk"
     'Forms
     Dim VMF As VoteMenuForm
     'Network Related Variables
@@ -156,7 +157,7 @@ Public Class MainForm
         CharacterList.Add("WereWolf")
         CharacterList.Add("WereWolf")
         CharacterList.Add("Seer")
-        CharacterList.Add("Insomniac")
+        CharacterList.Add("Hunter")
         CharacterList.Add("Robber")
         CharacterList.Add("TroubleMaker")
         TurnLabel.Text = ""
@@ -371,6 +372,9 @@ Public Class MainForm
                 For i As Integer = 0 To PlayerList.Count - 1
                     If StringArray(3).Equals(PlayerList(i).GetUniquePlayerID) Then
                         PlayerList(i).AddVote()
+                        If StringArray(4).Equals("Hunter") Then
+                            PlayerList(i).SetHunterSights(True)
+                        End If
                     End If
                 Next
             End If
@@ -512,7 +516,6 @@ Public Class MainForm
             SawCard = True
             'Reveal the number middle middle cards card when clicked
             RevealMiddleCard(cardNum)
-
         End If
     End Sub
     Private Sub SeerCardCheckTwoLogic(ByVal cardNum As Integer)
@@ -557,7 +560,7 @@ Public Class MainForm
             PlayerList(cardNum).SetPlayerCardType(thisPlayer.GetCardType)
             thisPlayer.SetPlayerCardType(RobbersNewRole)
             'send out New Robber ID and then Robberes New identity with Id 0 - 1 2  
-            Dim data() As Byte = Encoding.ASCII.GetBytes(PlayerList(cardNum).GetCardType + "<>" + PlayerList(cardNum).GetUniquePlayerID + "<>" + thisPlayer.GetCardType + "<>" + thisPlayer.GetUniquePlayerID)
+            Dim data() As Byte = Encoding.ASCII.GetBytes(PlayerList(cardNum).GetCardType + "<>" + PlayerList(cardNum).GetUniquePlayerID + "<>" + thisPlayer.GetCardType + "<>" + thisPlayer.GetUniquePlayerID + "<>" + "PlayerSwap")
             sendingUpdateCardChanges.Send(data, data.Length)
 
         End If
@@ -572,26 +575,40 @@ Public Class MainForm
                 Dim TempRole = PlayerList(cardNum).GetCardType
                 PlayerList(cardNum).SetPlayerCardType(PlayerList(TMFirstPickIndex).GetCardType)
                 PlayerList(TMFirstPickIndex).SetPlayerCardType(TempRole)
-                Dim data() As Byte = Encoding.ASCII.GetBytes(PlayerList(cardNum).GetCardType + "<>" + PlayerList(cardNum).GetUniquePlayerID + "<>" + PlayerList(TMFirstPickIndex).GetCardType + "<>" + PlayerList(TMFirstPickIndex).GetUniquePlayerID)
+                Dim data() As Byte = Encoding.ASCII.GetBytes(PlayerList(cardNum).GetCardType + "<>" + PlayerList(cardNum).GetUniquePlayerID + "<>" + PlayerList(TMFirstPickIndex).GetCardType + "<>" + PlayerList(TMFirstPickIndex).GetUniquePlayerID + "<>" + "PlayerSwap")
                 sendingUpdateCardChanges.Send(data, data.Length)
             End If
             TMFirstPickIndex = cardNum
         End If
     End Sub
+    Private Sub DrunkCardSwitchLogic(ByVal cardNum As Integer)
+        If InitialRole.Equals("Drunk") And TurnAllowed Then
+            Beep()
+            TurnAllowed = False
+            'Swap role's logic
+            DrunksNewRole = MiddleCardsList(cardNum)
+            MiddleCardsList(cardNum) = thisPlayer.GetCardType
+            thisPlayer.SetPlayerCardType(DrunksNewRole)
+            'send out New Robber ID and then Robberes New identity with Id 0 - 1 2  
+            Dim data() As Byte = Encoding.ASCII.GetBytes(MiddleCardsList(cardNum).ToString + "<>" + cardNum.ToString + "<>" + thisPlayer.GetCardType + "<>" + thisPlayer.GetUniquePlayerID + "<>" + "MiddleSwap")
+            sendingUpdateCardChanges.Send(data, data.Length)
+
+        End If
+    End Sub
     Private Sub Card5_Click(sender As Object, e As EventArgs) Handles Card5.Click
         WereWolfMiddleCardCheckLogic(0)
         SeerCardCheckTwoLogic(0)
-
+        DrunkCardSwitchLogic(0)
     End Sub
     Private Sub Card6_Click(sender As Object, e As EventArgs) Handles Card6.Click
         WereWolfMiddleCardCheckLogic(1)
         SeerCardCheckTwoLogic(1)
-
+        DrunkCardSwitchLogic(1)
     End Sub
     Private Sub Card7_Click(sender As Object, e As EventArgs) Handles Card7.Click
         WereWolfMiddleCardCheckLogic(2)
         SeerCardCheckTwoLogic(2)
-
+        DrunkCardSwitchLogic(2)
     End Sub
     Private Sub Card12_Click(sender As Object, e As EventArgs) Handles Card12.Click
         PlayerCardClickLogic(8)
@@ -695,6 +712,7 @@ Public Class MainForm
                 SeerTurnLogic()
                 RobberTurnLogic()
                 TroubleMakerTurnLogic()
+                DrunkTurnLogic()
                 InsomniacTurnLogic()
                 EndOfTurnsLogic()
             ElseIf Not Night And RoundStarted Then
@@ -906,6 +924,23 @@ Public Class MainForm
             EndOfTurnLogic()
         End If
     End Sub
+    Private Sub DrunkTurnLogic()
+        Dim StringTime() As String = Split(TimerLabel.Text, ":")
+        Dim thisRolesTimeToPlay As Integer
+        If RolePlayTime.TryGetValue("Drunk", thisRolesTimeToPlay) Then
+            If StringTime(1).Equals(thisRolesTimeToPlay.ToString) Then
+                TurnLabel.Text = "Drunk may be stumbling around..."
+                If InitialRole.Equals("Drunk") Then
+                    TurnAllowed = True
+                End If
+            End If
+
+            If Convert.ToInt32(StringTime(1)) >= (thisRolesTimeToPlay + 5) And InitialRole.Equals("Drunk") Then
+                EndOfTurnLogic()
+            End If
+        End If
+
+    End Sub
     Private Sub InsomniacTurnLogic()
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
         Dim thisRolesTimeToPlay As Integer
@@ -938,6 +973,7 @@ Public Class MainForm
     End Sub
     Private Sub RoundOverCheck()
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
+        Dim HunterDied As Boolean = False
         If StringTime(0).Equals(RoundTime) Or EndRoundVotePassed Then
             Me.Invoke(New RevealAllCardsDelegate(AddressOf RevealAllCards))
             'Prevent any more votes from being casted
@@ -956,7 +992,21 @@ Public Class MainForm
             For i As Integer = 0 To PlayerList.Count - 1
                 If PlayerList(i).GetVoteCount.Equals(tempPlayer.GetVoteCount) Then
                     listOfPlayersWhoDie.Add(PlayerList(i))
-                    UpdateTextBox(ChatBox, "Added, " + PlayerList(i).GetPlayerName)
+                    'UpdateTextBox(ChatBox, "Added, " + PlayerList(i).GetPlayerName)
+                End If
+            Next
+            'Now Check to see if Hunter Dies and if so kill the person who was in his sights
+            For i As Integer = 0 To listOfPlayersWhoDie.Count - 1
+                If listOfPlayersWhoDie(i).GetCardType.Equals("Hunter") Then
+                    HunterDied = True
+                    Exit For
+                End If
+            Next
+            'Add whomever the hunter tagged to the to die list
+            For i As Integer = 0 To PlayerList.Count - 1
+                If PlayerList(i).GetHunterSights Then
+                    listOfPlayersWhoDie.Add(PlayerList(i))
+                    Exit For
                 End If
             Next
             'then show who died on screen
@@ -1129,15 +1179,25 @@ Public Class MainForm
             Dim NewID As String = StringArray(1)
             Dim NewRole As String = StringArray(2)
             Dim OriginalID As String = StringArray(3)
-            'UpdateTextBox(ChatBox, "Recieved " + NewID + " " + NewRole + " " + OriginalID)
-            For i As Integer = 0 To PlayerList.Count - 1
-                If PlayerList(i).GetUniquePlayerID.Equals(OriginalID) Then
-                    PlayerList(i).SetPlayerCardType(NewRole)
-                End If
-                If PlayerList(i).GetUniquePlayerID.Equals(NewID) Then
-                    PlayerList(i).SetPlayerCardType(OriginalRole)
-                End If
-            Next
+            Dim SwapType As String = StringArray(4)
+            If SwapType.Equals("PlayerSwap") Then
+                For i As Integer = 0 To PlayerList.Count - 1
+                    If PlayerList(i).GetUniquePlayerID.Equals(OriginalID) Then
+                        PlayerList(i).SetPlayerCardType(NewRole)
+                    End If
+                    If PlayerList(i).GetUniquePlayerID.Equals(NewID) Then
+                        PlayerList(i).SetPlayerCardType(OriginalRole)
+                    End If
+                Next
+            ElseIf SwapType.Equals("MiddleSwap") Then
+                For i As Integer = 0 To PlayerList.Count - 1
+                    If PlayerList(i).GetUniquePlayerID.Equals(OriginalID) Then
+                        PlayerList(i).SetPlayerCardType(NewRole)
+                    End If
+                Next
+                MiddleCardsList(NewID) = OriginalRole
+            End If
+
         Loop
     End Sub
 
@@ -1167,6 +1227,12 @@ Public Class MainForm
             ListOfPlayerCards(i).Image = My.Resources.Minion
         ElseIf PlayerList(i).GetCardType.Contains("Insomniac") Then
             ListOfPlayerCards(i).Image = My.Resources.insomniac
+        ElseIf PlayerList(i).GetCardType.Contains("Drunk") Then
+            ListOfPlayerCards(i).Image = My.Resources.drunk
+        ElseIf PlayerList(i).GetCardType.Contains("Tanner") Then
+            ListOfPlayerCards(i).Image = My.Resources.tanner
+        ElseIf PlayerList(i).GetCardType.Contains("Hunter") Then
+            ListOfPlayerCards(i).Image = My.Resources.hunter
         End If
     End Sub
 
@@ -1185,6 +1251,12 @@ Public Class MainForm
             MiddleCardPicutreList(index).Image = My.Resources.Minion
         ElseIf MiddleCardsList(index).Contains("Insomniac") Then
             MiddleCardPicutreList(index).Image = My.Resources.insomniac
+        ElseIf MiddleCardsList(index).Contains("Drunk") Then
+            MiddleCardPicutreList(index).Image = My.Resources.drunk
+        ElseIf MiddleCardsList(index).Contains("Tanner") Then
+            MiddleCardPicutreList(index).Image = My.Resources.tanner
+        ElseIf MiddleCardsList(index).Contains("Hunter") Then
+            MiddleCardPicutreList(index).Image = My.Resources.hunter
         End If
     End Sub
 
@@ -1223,8 +1295,8 @@ Public Class MainForm
     End Sub
 
     Public Sub SendVoteToEveryone(ByVal playreVotedFor As Player)
-        'Update Everyone's vote to everyone else
-        Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(playreVotedFor.GetPlayerName() + "<>" + playreVotedFor.GetCardType + "<>" + "-" + "<>" + playreVotedFor.GetUniquePlayerID.ToString + "<>" + "-" + "<>" + "UpdateKillVotes")
+        'Update Everyone's vote to everyone else, we include who did the vote so we can take into account voting perks
+        Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(playreVotedFor.GetPlayerName() + "<>" + playreVotedFor.GetCardType + "<>" + "-" + "<>" + playreVotedFor.GetUniquePlayerID.ToString + "<>" + InitialRole + "<>" + "UpdateKillVotes")
         sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
     End Sub
     Public Sub SendVotesToEndRound()
