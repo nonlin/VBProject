@@ -156,7 +156,7 @@ Public Class MainForm
         CharacterList.Add("WereWolf")
         CharacterList.Add("WereWolf")
         CharacterList.Add("Seer")
-        'CharacterList.Add("Villager")
+        CharacterList.Add("Insomniac")
         CharacterList.Add("Robber")
         CharacterList.Add("TroubleMaker")
         TurnLabel.Text = ""
@@ -508,6 +508,7 @@ Public Class MainForm
     End Sub
     Private Sub WereWolfMiddleCardCheckLogic(ByVal cardNum As Integer)
         If InitialRole.Equals("WereWolf") And Not SawCard And OneWereWolf And TurnAllowed Then
+            Beep()
             SawCard = True
             'Reveal the number middle middle cards card when clicked
             RevealMiddleCard(cardNum)
@@ -516,6 +517,7 @@ Public Class MainForm
     End Sub
     Private Sub SeerCardCheckTwoLogic(ByVal cardNum As Integer)
         If InitialRole.Equals("Seer") And Not SawCard And TurnAllowed And CardCount < 2 Then
+            Beep()
             CardCount = CardCount + 1
             'Reveal the number middle middle cards card when clicked
             RevealMiddleCard(cardNum)
@@ -530,14 +532,23 @@ Public Class MainForm
         'How many the seer can see
 
         If InitialRole.Equals("Seer") And Not SawCard And TurnAllowed Then
+            Beep()
             SawCard = True
             'Reveal the number middle middle cards card when clicked
             RevealPlayerCard(cardNum)
         End If
 
     End Sub
+    Private Sub InsomniacCardCheckLogic(ByVal cardNum As Integer)
+        If InitialRole.Equals("Insomniac") And Not SawCard And TurnAllowed Then
+            Beep()
+            SawCard = True
+            RevealPlayerCard(cardNum)
+        End If
+    End Sub
     Private Sub RobberCardSwitchLogic(ByVal cardNum As Integer)
         If InitialRole.Equals("Robber") And TurnAllowed Then
+            Beep()
             TurnAllowed = False 'Turn is over once Robber picks a person to swap with
             'Reveal cards first
             RevealPlayerCard(cardNum)
@@ -554,6 +565,7 @@ Public Class MainForm
     Private Sub TroubleMakerCardSwitchLogic(ByVal cardNum As Integer)
 
         If InitialRole.Equals("TroubleMaker") And TurnAllowed Then
+            Beep()
             If TMFirstPickIndex > 0 Then
                 TurnAllowed = False
                 'Means we have picked two people to swap, same swap logic for robber, same process too
@@ -609,11 +621,11 @@ Public Class MainForm
         SeerCardCheckLogic(CardNum)
         RobberCardSwitchLogic(CardNum)
         TroubleMakerCardSwitchLogic(CardNum)
+
     End Sub
     Private Sub Card1_Click(sender As Object, e As EventArgs) Handles Card1.Click
-        If thisPlayer.GetPlayerNumber() = 0 Then
-
-        End If
+        InsomniacCardCheckLogic(0)
+        Beep()
     End Sub
     Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs)
 
@@ -678,12 +690,12 @@ Public Class MainForm
             If Night Then
                 'Enable Turn Display
                 TurnLabel.Visible = True
-                'Begin Players Turn, Wolf Starts at 10, ends at 15
                 WereWolfTurnLogic()
-                'Seer at 15 starts, ends at 20
+                MinionTurnLogic()
                 SeerTurnLogic()
                 RobberTurnLogic()
                 TroubleMakerTurnLogic()
+                InsomniacTurnLogic()
                 EndOfTurnsLogic()
             ElseIf Not Night And RoundStarted Then
                 Me.BackgroundImage = My.Resources.wooddark
@@ -729,49 +741,62 @@ Public Class MainForm
                 RolePlayTime.Add("WereWolf", TurnTime)
                 TimeMulti = TimeMulti + 1
                 WWFound = True
-                Continue For
+                Exit For
             End If
+        Next
+        For i As Integer = 0 To CharacterList.Count - 1
             If CharacterList(i).Equals("Minion") And Not MFound Then
                 RolePlayTime.Add("Minion", TurnTime + (5 * TimeMulti))
                 TimeMulti = TimeMulti + 1
                 MFound = True
-                Continue For
+                Exit For
             End If
+        Next
+        For i As Integer = 0 To CharacterList.Count - 1
             If CharacterList(i).Equals("Seer") And Not SFound Then
                 RolePlayTime.Add("Seer", TurnTime + (5 * TimeMulti))
                 TimeMulti = TimeMulti + 1
                 SFound = True
-                Continue For
+                Exit For
             End If
+        Next
+        For i As Integer = 0 To CharacterList.Count - 1
             If CharacterList(i).Equals("Robber") And Not RFound Then
                 RolePlayTime.Add("Robber", TurnTime + (5 * TimeMulti))
                 TimeMulti = TimeMulti + 1
                 RFound = True
-                Continue For
+                Exit For
             End If
+        Next
+        For i As Integer = 0 To CharacterList.Count - 1
             If CharacterList(i).Equals("TroubleMaker") And Not TMFound Then
                 RolePlayTime.Add("TroubleMaker", TurnTime + (5 * TimeMulti))
                 TimeMulti = TimeMulti + 1
                 TMFound = True
-                Continue For
+                Exit For
             End If
+        Next
+        For i As Integer = 0 To CharacterList.Count - 1
             If CharacterList(i).Equals("Drunk") And Not DFound Then
                 RolePlayTime.Add("Drunk", TurnTime + (5 * TimeMulti))
                 TimeMulti = TimeMulti + 1
                 DFound = True
-                Continue For
+                Exit For
             End If
+        Next
+        For i As Integer = 0 To CharacterList.Count - 1
             If CharacterList(i).Equals("Insomniac") And Not IFound Then
                 RolePlayTime.Add("Insomniac", TurnTime + (5 * TimeMulti))
                 TimeMulti = TimeMulti + 1
                 IFound = True
-                Continue For
+                Exit For
             End If
         Next
 
     End Sub
     Private Sub EndOfTurnLogic()
         TurnAllowed = False
+        Card1.Enabled = False
         HideAllCards()
     End Sub
     Private Sub WereWolfTurnLogic()
@@ -798,6 +823,38 @@ Public Class MainForm
         'Hide all Cards at specified time
         If Convert.ToInt32(StringTime(1)) >= (RolePlayTime.Item("WereWolf") + 5) And InitialRole.Equals("WereWolf") Then
             EndOfTurnLogic()
+        End If
+
+    End Sub
+    Private Sub MinionTurnLogic()
+        'Check Timer Text to Trigger Events at certain times
+        Dim StringTime() As String = Split(TimerLabel.Text, ":")
+        Dim thisRolesTimeToPlay As Integer
+        'Werewolfs go first
+        If RolePlayTime.TryGetValue("Minion", thisRolesTimeToPlay) Then
+
+            If StringTime(1).Equals(thisRolesTimeToPlay.ToString) Then
+                TurnLabel.Text = "Minions may be looking for beastly allies..."
+                'Minion gets to see other WereWolfs too
+                If InitialRole.Contains("Minion") Then
+                    TurnAllowed = True
+
+                    For i As Integer = 1 To PlayerList.Count - 1
+                        If "WereWolf".Contains(PlayerList(i).GetCardType) Then
+                            'If we are the same reveal card (WereWolf) show it
+                            ListOfPlayerCards(i).Image = My.Resources.w
+                            'since a card was revealed 
+                            SawCard = True
+                        End If
+                    Next
+                End If
+            End If
+
+            'Hide all Cards at specified time
+            If Convert.ToInt32(StringTime(1)) >= (thisRolesTimeToPlay + 5) And InitialRole.Equals("Minion") Then
+                EndOfTurnLogic()
+            End If
+
         End If
 
     End Sub
@@ -848,6 +905,25 @@ Public Class MainForm
         If Convert.ToInt32(StringTime(1)) >= ((RolePlayTime.Item("TroubleMaker")) + 5) And InitialRole.Equals("TroubleMaker") Then
             EndOfTurnLogic()
         End If
+    End Sub
+    Private Sub InsomniacTurnLogic()
+        Dim StringTime() As String = Split(TimerLabel.Text, ":")
+        Dim thisRolesTimeToPlay As Integer
+        If RolePlayTime.TryGetValue("Insomniac", thisRolesTimeToPlay) Then
+            If StringTime(1).Equals(thisRolesTimeToPlay.ToString) Then
+                TurnLabel.Text = "Insomniac may be waking up..."
+                If InitialRole.Equals("Insomniac") Then
+                    TurnAllowed = True
+                    'Enable card so Insomniac can click their card
+                    Card1.Enabled = True
+                End If
+            End If
+
+            If Convert.ToInt32(StringTime(1)) >= (thisRolesTimeToPlay + 5) And InitialRole.Equals("Insomniac") Then
+                EndOfTurnLogic()
+            End If
+        End If
+
     End Sub
     Private Sub EndOfTurnsLogic()
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
@@ -983,9 +1059,8 @@ Public Class MainForm
                     PlayerList(i).SetPlayerCardType(StringArray(0))
                 End If
                 thisPlayer = PlayerList(0)
-                'Set initalRole to refer back to since cards may get switched
+                'Set an initalRole to refer back to since cards may get switched
                 InitialRole = thisPlayer.GetCardType
-                'UpdateTextBox(ChatBox, PlayerList(i).GetPlayerName() + " " + PlayerList(i).GetCardType)
             Next
 
             'Assign Middle Cards
@@ -1012,6 +1087,8 @@ Public Class MainForm
         Select Case type
             Case "WereWolf"
                 Card1.Image = My.Resources.w
+            Case "Minion"
+                Card1.Image = My.Resources.Minion
             Case "Villager"
                 Card1.Image = My.Resources.v
             Case "TroubleMaker"
@@ -1020,6 +1097,10 @@ Public Class MainForm
                 Card1.Image = My.Resources.r
             Case "Seer"
                 Card1.Image = My.Resources.s
+            Case "Drunk"
+                Card1.Image = My.Resources.drunk
+            Case "Insomniac"
+                Card1.Image = My.Resources.insomniac
         End Select
 
         If isMaster Then
@@ -1082,6 +1163,10 @@ Public Class MainForm
             ListOfPlayerCards(i).Image = My.Resources.r
         ElseIf PlayerList(i).GetCardType.Contains("TroubleMaker") Then
             ListOfPlayerCards(i).Image = My.Resources.t
+        ElseIf PlayerList(i).GetCardType.Contains("Minion") Then
+            ListOfPlayerCards(i).Image = My.Resources.Minion
+        ElseIf PlayerList(i).GetCardType.Contains("Insomniac") Then
+            ListOfPlayerCards(i).Image = My.Resources.insomniac
         End If
     End Sub
 
@@ -1096,6 +1181,10 @@ Public Class MainForm
             MiddleCardPicutreList(index).Image = My.Resources.r
         ElseIf MiddleCardsList(index).Contains("TroubleMaker") Then
             MiddleCardPicutreList(index).Image = My.Resources.t
+        ElseIf MiddleCardsList(index).Contains("Minion") Then
+            MiddleCardPicutreList(index).Image = My.Resources.Minion
+        ElseIf MiddleCardsList(index).Contains("Insomniac") Then
+            MiddleCardPicutreList(index).Image = My.Resources.insomniac
         End If
     End Sub
 

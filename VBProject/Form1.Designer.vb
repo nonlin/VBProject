@@ -224,7 +224,6 @@ Partial Class MainForm
         'Card1
         '
         Me.Card1.Anchor = System.Windows.Forms.AnchorStyles.Bottom
-        Me.Card1.BackgroundImage = CType(resources.GetObject("Card1.BackgroundImage"), System.Drawing.Image)
         Me.Card1.Image = Global.ONUWPC.My.Resources.Resources.back
         Me.Card1.InitialImage = CType(resources.GetObject("Card1.InitialImage"), System.Drawing.Image)
         Me.Card1.Location = New System.Drawing.Point(845, 737)
@@ -360,7 +359,6 @@ Partial Class MainForm
         'Card8
         '
         Me.Card8.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Card8.BackgroundImage = Global.ONUWPC.My.Resources.Resources.back
         Me.Card8.Image = Global.ONUWPC.My.Resources.Resources.back
         Me.Card8.InitialImage = Global.ONUWPC.My.Resources.Resources.back
         Me.Card8.Location = New System.Drawing.Point(1415, 38)
@@ -529,7 +527,7 @@ Partial Class MainForm
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(300, 300)
         Me.Name = "MainForm"
-        Me.Text = "One Night Ultimate WereWolf PC Edition 1.2.6 Beta"
+        Me.Text = "One Night Ultimate WereWolf PC Edition 1.2.7 Beta"
         CType(Me.Card4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Card3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Card1, System.ComponentModel.ISupportInitialize).EndInit()
