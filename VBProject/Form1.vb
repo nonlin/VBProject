@@ -5,6 +5,7 @@ Imports System.Net
 Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
+Imports System.Runtime.InteropServices
 
 
 Public Class MainForm
@@ -36,6 +37,7 @@ Public Class MainForm
     Dim EndRoundVotePassed = False
     Dim TurnTime As Integer = 10
     Dim InitialRole As String = ""
+    Dim AlreadyVoted As Boolean = False
     Private Delegate Sub UpdateTextBoxDelegate(ByVal txtBox As RichTextBox, ByVal value As String)
     Private Delegate Sub UpdateReadyMessage(ByVal txtBox As CheckBox, ByVal value As String)
     Private Delegate Sub EnableTimerDelegate(ByVal enable As Boolean)
@@ -61,6 +63,8 @@ Public Class MainForm
     Dim randomIntegerID As Integer = 0
     Dim Time As Integer = 0
     Dim Night = False
+    'So we can set how many players started a round in case of DC
+    Dim GamePlayerCount As Integer = 0
     'Card Turn Boolean Checks
     Dim SawCard As Boolean = False
     Dim OneWereWolf As Boolean = False
@@ -100,6 +104,12 @@ Public Class MainForm
     Private Const portRevealCards As Integer = 9659 'Or whatever port number you want to use
     Private receivingRevealCards As UdpClient
     Private sendingRevealCards As UdpClient
+    <DllImport("winmm.dll")> _
+    Shared Function PlaySound( _
+   ByVal szSound As String, _
+   ByVal hModule As UIntPtr, _
+   ByVal fdwSound As Integer) As Integer
+    End Function
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -157,7 +167,7 @@ Public Class MainForm
         CharacterList.Add("WereWolf")
         CharacterList.Add("WereWolf")
         CharacterList.Add("Seer")
-        CharacterList.Add("Hunter")
+        'CharacterList.Add("Hunter")
         CharacterList.Add("Robber")
         CharacterList.Add("TroubleMaker")
         TurnLabel.Text = ""
@@ -168,7 +178,7 @@ Public Class MainForm
         Me.Size = New System.Drawing.Size(200, 23)
         'Disable Looking at their own card
         Card1.Enabled = False
-        VMF = New VoteMenuForm(PlayerList)
+        VMF = New VoteMenuForm(PlayerList, AlreadyVoted)
     End Sub
 
     Private Sub InitializeSender()
@@ -301,7 +311,8 @@ Public Class MainForm
                     PlayerList.Add(NewPlayer)
                     'Enable a new card for said Player
                     For i As Integer = 0 To PlayerList.Count - 1
-                        Me.Invoke(New EnableNewCardForPlayerDelegate(AddressOf EnableNewCardForPlayer), i)                     
+                        Me.Invoke(New EnableNewCardForPlayerDelegate(AddressOf EnableNewCardForPlayer), i)
+                        Me.Invoke(New SetPlayerNameLabelsDelegate(AddressOf SetPlayerNameLabels))
                     Next
                 End If
 
@@ -346,7 +357,7 @@ Public Class MainForm
                         End If
                     Next
                     If PlayerList.Count < 3 Then
-                        UpdateReadyText(ReadyToStart, "Not Enough Players To Start")
+                        UpdateReadyText(ReadyToStart, "Not Enough Players")
                     End If
                 End If
             End If
@@ -401,7 +412,7 @@ Public Class MainForm
             ElseIf CharacterList.Count < PlayerList.Count + 3 Then
                 UpdateReadyText(ReadyToStart, "Not Enough Roles Added")
             ElseIf PlayerList.Count < 3 Then
-                UpdateReadyText(ReadyToStart, "Not Enough Players To Start")
+                UpdateReadyText(ReadyToStart, "Not Enough Players")
             End If
 
             'Since we have a master tell clients who is  master, but do it once on InitialSend
@@ -498,7 +509,7 @@ Public Class MainForm
             If value.Equals("Ready To Start?") Then
                 ReadyCheckBox.Enabled = True
                 ReadyCheckBox.Text = value
-            ElseIf value.Equals("Not Enough Players To Start") Then
+            ElseIf value.Equals("Not Enough Players") Then
                 ReadyCheckBox.Enabled = False
                 ReadyCheckBox.Checked = False
                 ReadyCheckBox.Text = value
@@ -512,7 +523,8 @@ Public Class MainForm
     End Sub
     Private Sub WereWolfMiddleCardCheckLogic(ByVal cardNum As Integer)
         If InitialRole.Equals("WereWolf") And Not SawCard And OneWereWolf And TurnAllowed Then
-            Beep()
+            My.Computer.Audio.PlaySystemSound(Media.SystemSounds.Beep)
+            'PlaySound("G:\Click.mp3", UIntPtr.Zero, &H20000 Or &H1)
             SawCard = True
             'Reveal the number middle middle cards card when clicked
             RevealMiddleCard(cardNum)
@@ -520,7 +532,7 @@ Public Class MainForm
     End Sub
     Private Sub SeerCardCheckTwoLogic(ByVal cardNum As Integer)
         If InitialRole.Equals("Seer") And Not SawCard And TurnAllowed And CardCount < 2 Then
-            Beep()
+            My.Computer.Audio.PlaySystemSound(Media.SystemSounds.Beep)
             CardCount = CardCount + 1
             'Reveal the number middle middle cards card when clicked
             RevealMiddleCard(cardNum)
@@ -535,7 +547,7 @@ Public Class MainForm
         'How many the seer can see
 
         If InitialRole.Equals("Seer") And Not SawCard And TurnAllowed Then
-            Beep()
+            My.Computer.Audio.PlaySystemSound(Media.SystemSounds.Beep)
             SawCard = True
             'Reveal the number middle middle cards card when clicked
             RevealPlayerCard(cardNum)
@@ -544,14 +556,14 @@ Public Class MainForm
     End Sub
     Private Sub InsomniacCardCheckLogic(ByVal cardNum As Integer)
         If InitialRole.Equals("Insomniac") And Not SawCard And TurnAllowed Then
-            Beep()
+            My.Computer.Audio.PlaySystemSound(Media.SystemSounds.Beep)
             SawCard = True
             RevealPlayerCard(cardNum)
         End If
     End Sub
     Private Sub RobberCardSwitchLogic(ByVal cardNum As Integer)
         If InitialRole.Equals("Robber") And TurnAllowed Then
-            Beep()
+            My.Computer.Audio.PlaySystemSound(Media.SystemSounds.Beep)
             TurnAllowed = False 'Turn is over once Robber picks a person to swap with
             'Reveal cards first
             RevealPlayerCard(cardNum)
@@ -568,7 +580,7 @@ Public Class MainForm
     Private Sub TroubleMakerCardSwitchLogic(ByVal cardNum As Integer)
 
         If InitialRole.Equals("TroubleMaker") And TurnAllowed Then
-            Beep()
+            My.Computer.Audio.PlaySystemSound(Media.SystemSounds.Beep)
             If TMFirstPickIndex > 0 Then
                 TurnAllowed = False
                 'Means we have picked two people to swap, same swap logic for robber, same process too
@@ -583,7 +595,7 @@ Public Class MainForm
     End Sub
     Private Sub DrunkCardSwitchLogic(ByVal cardNum As Integer)
         If InitialRole.Equals("Drunk") And TurnAllowed Then
-            Beep()
+            My.Computer.Audio.PlaySystemSound(Media.SystemSounds.Beep)
             TurnAllowed = False
             'Swap role's logic
             DrunksNewRole = MiddleCardsList(cardNum)
@@ -721,6 +733,10 @@ Public Class MainForm
                 TurnLabel.ForeColor = Color.WhiteSmoke
                 RoundOverCheck()
             End If
+            If isMaster And GamePlayerCount < PlayerList.Count And Not StartRound Then
+                'Someone disconnected pause/stop or restart the game
+                EnableTimerDlg(False)
+            End If
         End If
     End Sub
     Private Sub StartRoundSetup(ByVal SecondsPassed As String)
@@ -729,6 +745,7 @@ Public Class MainForm
             TurnTimeCalcuator()
             StartRound = False
             RoundStarted = True
+            GamePlayerCount = PlayerList.Count
             VoteMenuButton.Enabled = True
             Card1.Image = My.Resources.back
             If EnableAudio Then
@@ -1004,7 +1021,7 @@ Public Class MainForm
             Next
             'Add whomever the hunter tagged to the to die list
             For i As Integer = 0 To PlayerList.Count - 1
-                If PlayerList(i).GetHunterSights Then
+                If PlayerList(i).GetHunterSights And HunterDied Then
                     listOfPlayersWhoDie.Add(PlayerList(i))
                     Exit For
                 End If
@@ -1151,6 +1168,10 @@ Public Class MainForm
                 Card1.Image = My.Resources.drunk
             Case "Insomniac"
                 Card1.Image = My.Resources.insomniac
+            Case "Hunter"
+                Card1.Image = My.Resources.hunter
+            Case "Tanner"
+                Card1.Image = My.Resources.tanner
         End Select
 
         If isMaster Then
@@ -1285,7 +1306,7 @@ Public Class MainForm
     End Sub
     Private Sub VoteMenuButton_Click(sender As Object, e As EventArgs) Handles VoteMenuButton.Click
         If RoundStarted = True Then
-            VMF = New VoteMenuForm(PlayerList)
+            VMF = New VoteMenuForm(PlayerList, AlreadyVoted)
             VMF.Show()
             VoteMenuButton.Enabled = False
         End If
@@ -1298,10 +1319,12 @@ Public Class MainForm
         'Update Everyone's vote to everyone else, we include who did the vote so we can take into account voting perks
         Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(playreVotedFor.GetPlayerName() + "<>" + playreVotedFor.GetCardType + "<>" + "-" + "<>" + playreVotedFor.GetUniquePlayerID.ToString + "<>" + InitialRole + "<>" + "UpdateKillVotes")
         sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
+        AlreadyVoted = True
     End Sub
     Public Sub SendVotesToEndRound()
         Dim PlayerData() As Byte = Encoding.ASCII.GetBytes(thisPlayer.GetPlayerName() + "<>" + thisPlayer.GetCardType + "<>" + "-" + "<>" + thisPlayer.GetUniquePlayerID.ToString + "<>" + "-" + "<>" + "UpdateVotesToEndRound")
         sendingClientPlayerInfo.Send(PlayerData, PlayerData.Length)
+        AlreadyVoted = True
     End Sub
     Public Sub VoteToEndRound()
 

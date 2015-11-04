@@ -2,7 +2,8 @@
 
     Dim CheckBoxList As New List(Of CheckBox)
     Dim PlayerList As New List(Of Player)
-    Public Sub New(ByVal PL As List(Of Player))
+    Dim AlreadyVoted As Boolean
+    Public Sub New(ByVal PL As List(Of Player), ByVal voted As Boolean)
         InitializeComponent()
         Me.MaximumSize = New Size(470, 500)
         Me.MinimumSize = Me.MaximumSize
@@ -19,7 +20,7 @@
         CheckBoxList.Add(CheckBox8)
         CheckBoxList.Add(CheckBox9)
         PlayerList = PL
-
+        AlreadyVoted = voted
     End Sub
     Private Sub VoteMenuForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetCheckBoxNames()
@@ -29,7 +30,10 @@
                 CheckBoxList(i).Visible = False
             Next
         End If
-
+        If AlreadyVoted Then
+            Disable_CheckBoxes()
+            EndRoundCheckBox.Enabled = False
+        End If
     End Sub
     Public Sub SetCheckBoxNames()
         'Set Each Checboxes name
