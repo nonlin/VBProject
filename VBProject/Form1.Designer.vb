@@ -438,6 +438,7 @@ Partial Class MainForm
         '
         'Card12
         '
+        Me.Card12.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.Card12.Image = CType(resources.GetObject("Card12.Image"), System.Drawing.Image)
         Me.Card12.InitialImage = CType(resources.GetObject("Card12.InitialImage"), System.Drawing.Image)
         Me.Card12.Location = New System.Drawing.Point(90, 357)

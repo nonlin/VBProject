@@ -98,7 +98,6 @@
     <Compile Include="CardInfoForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Characters.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -121,7 +120,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="NetworkManager.vb" />
     <Compile Include="Player.vb" />
     <Compile Include="SettingsForm.Designer.vb">
       <DependentUpon>SettingsForm.vb</DependentUpon>
@@ -129,7 +127,6 @@
     <Compile Include="SettingsForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Sound.vb" />
     <Compile Include="VoteMenuForm.Designer.vb">
       <DependentUpon>VoteMenuForm.vb</DependentUpon>
     </Compile>

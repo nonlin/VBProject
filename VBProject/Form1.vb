@@ -28,7 +28,6 @@ Public Class MainForm
     Dim RoundStarted As Boolean = False
     Dim EnableAudio As Boolean = True
     ' Dim PlayerCount As Integer = 0
-    Dim characters As New Characters
     Dim isMaster As Boolean = False
     Dim Pos As Integer = 0
     Dim StartRound As Boolean = True
@@ -63,6 +62,7 @@ Public Class MainForm
     Dim randomIntegerID As Integer = 0
     Dim Time As Integer = 0
     Dim Night = False
+    Dim ReverseTimer = False
     'So we can set how many players started a round in case of DC
     Dim GamePlayerCount As Integer = 0
     'Card Turn Boolean Checks
@@ -104,13 +104,6 @@ Public Class MainForm
     Private Const portRevealCards As Integer = 9659 'Or whatever port number you want to use
     Private receivingRevealCards As UdpClient
     Private sendingRevealCards As UdpClient
-    <DllImport("winmm.dll")> _
-    Shared Function PlaySound( _
-   ByVal szSound As String, _
-   ByVal hModule As UIntPtr, _
-   ByVal fdwSound As Integer) As Integer
-    End Function
-
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -698,6 +691,8 @@ Public Class MainForm
             sendingClient.Send(timeData, timeData.Length)
         End If
         BeginRound()
+
+
     End Sub
     Private Sub EnableTimerDlg(ByVal Enable As Boolean)
         GameTime.Enabled = Enable
@@ -982,16 +977,17 @@ Public Class MainForm
         'Round time is last values added to dictinoary plus 5 sesconds after
         If StringTime(1).Equals((RolePlayTime.Values.Last + 5).ToString) Then
             'Me.Invoke(New RevealAllCardsDelegate(AddressOf RevealAllCards))
-            'Reset Time, since its calle for both server and client master will get updated to update all clients
+            'Reset Time, since its called for both server and client master will get updated to update all clients
             Time = 0
             'So turns don't happen again
             Night = False
+            ReverseTimer = True
         End If
     End Sub
     Private Sub RoundOverCheck()
         Dim StringTime() As String = Split(TimerLabel.Text, ":")
         Dim HunterDied As Boolean = False
-        If StringTime(0).Equals(RoundTime) Or EndRoundVotePassed Then
+        If StringTime(0).Equals(RoundTime.ToString()) Or EndRoundVotePassed Then
             Me.Invoke(New RevealAllCardsDelegate(AddressOf RevealAllCards))
             'Prevent any more votes from being casted
             VMF.Disable_CheckBoxes()
@@ -1089,15 +1085,28 @@ Public Class MainForm
                     'Prep Random Seeds
                     Randomize()
                     Dim r As Random = New Random()
-                    'Send a message for each player
+
+                    Dim RandomListOfCharacters As New List(Of String)
+                    'randomize a new list before randomly picking from the list to make things a bit more random
                     For i As Integer = 0 To isReadyList.Count - 1
 
                         Dim randomChar As Integer = r.Next(0, RoleList.Count - 1) 'CInt(Int((RoleList.Count - 1 * Rnd()) + 0))
-                        Dim stringToSend As String = RoleList(randomChar) + "<>" + isReadyList(i)
+                        RandomListOfCharacters.Add(RoleList(randomChar))
+                        RoleList.RemoveAt(randomChar)
+
+                    Next
+
+                    Dim r2 As Random = New Random()
+                    'Send a message for each player
+                    For i As Integer = 0 To isReadyList.Count - 1
+
+                        Dim randomChar As Integer = r2.Next(0, RandomListOfCharacters.Count - 1)
+                        Dim stringToSend As String = RandomListOfCharacters(randomChar) + "<>" + isReadyList(i)
                         Dim data2() As Byte = Encoding.ASCII.GetBytes(stringToSend)
                         sendingAssignedCards.Send(data2, data2.Length)
-                        RoleList.RemoveAt(randomChar)
+                        RandomListOfCharacters.RemoveAt(randomChar)
                     Next
+
                     'assign the last 3 remaining middle cards
                     For j As Integer = 1 To 3
 
