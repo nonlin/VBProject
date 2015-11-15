@@ -576,6 +576,8 @@ Public Class MainForm
             My.Computer.Audio.PlaySystemSound(Media.SystemSounds.Beep)
             If TMFirstPickIndex > 0 Then
                 TurnAllowed = False
+                'set Card back to normal to indicate card swap
+                ListOfPlayerCards(TMFirstPickIndex).Image = My.Resources.back
                 'Means we have picked two people to swap, same swap logic for robber, same process too
                 Dim TempRole = PlayerList(cardNum).GetCardType
                 PlayerList(cardNum).SetPlayerCardType(PlayerList(TMFirstPickIndex).GetCardType)
@@ -583,6 +585,7 @@ Public Class MainForm
                 Dim data() As Byte = Encoding.ASCII.GetBytes(PlayerList(cardNum).GetCardType + "<>" + PlayerList(cardNum).GetUniquePlayerID + "<>" + PlayerList(TMFirstPickIndex).GetCardType + "<>" + PlayerList(TMFirstPickIndex).GetUniquePlayerID + "<>" + "PlayerSwap")
                 sendingUpdateCardChanges.Send(data, data.Length)
             End If
+            ListOfPlayerCards(cardNum).Image = My.Resources.backHighlight
             TMFirstPickIndex = cardNum
         End If
     End Sub
@@ -590,6 +593,7 @@ Public Class MainForm
         If InitialRole.Equals("Drunk") And TurnAllowed Then
             My.Computer.Audio.PlaySystemSound(Media.SystemSounds.Beep)
             TurnAllowed = False
+            MiddleCardPicutreList(cardNum).Image = My.Resources.backHighlight
             'Swap role's logic
             DrunksNewRole = MiddleCardsList(cardNum)
             MiddleCardsList(cardNum) = thisPlayer.GetCardType
